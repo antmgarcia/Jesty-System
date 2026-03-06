@@ -1198,7 +1198,7 @@
     renderHeroCombo({ expr: 'chaotic', color: COLORS[3], hat: 'flame-crown', glasses: 'neon-shades' });
   })();
 
-  function shuffleHero() {
+  window.shuffleHero = function() {
     if (heroSpinning) return;
     heroSpinning = true;
 
