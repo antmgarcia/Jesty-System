@@ -43,12 +43,9 @@
     .nav-link.active { color: var(--jesty-text); background: var(--jesty-bg-secondary); }
     .nav-burger { display: none; width: 32px; height: 32px; border: none; background: none; cursor: pointer; color: var(--jesty-text); padding: 0; }
     .nav-footer { margin-top: auto; padding-top: 16px; }
-    .theme-toggle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--jesty-border); background: var(--jesty-bg-tertiary); color: var(--jesty-text-muted); cursor: pointer; transition: all 0.2s; }
-    .theme-toggle:hover { color: var(--jesty-text); border-color: var(--jesty-border-hover); }
-    .theme-toggle svg { width: 16px; height: 16px; }
-    .theme-toggle .icon-moon { display: none; }
-    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
-    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+    .theme-switch { display: flex; align-items: center; background: var(--jesty-bg-tertiary); border-radius: 20px; padding: 3px; border: 1px solid var(--jesty-border); gap: 0; }
+    .theme-switch-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 17px; border: none; cursor: pointer; transition: all 0.2s; background: none; color: var(--jesty-text-muted); }
+    .theme-switch-btn.active { background: var(--jesty-bg); color: var(--jesty-text); box-shadow: 0 1px 4px var(--jesty-shadow); }
     .nav-overlay { display: none; }
 
     /* Main container */
@@ -354,7 +351,7 @@
       .nav { position: fixed; top: 0; left: 0; right: 0; bottom: auto; width: 100%; height: 48px; flex-direction: row; align-items: center; justify-content: space-between; padding: 0 16px; border-right: none; border-bottom: 1px solid var(--jesty-border); overflow: visible; }
       .nav-logo { margin-bottom: 0; }
       .nav-burger { display: flex; align-items: center; justify-content: center; }
-      .nav-footer { margin-top: 0; padding-top: 0; order: -1; margin-right: 8px; }
+      .nav-footer { margin-top: 0; padding-top: 0; display: flex; align-items: center; margin-right: 8px; }
       .nav-links { position: fixed; top: 48px; left: 0; right: 0; background: var(--jesty-bg); backdrop-filter: blur(12px); flex-direction: column; gap: 2px; padding: 12px 16px; border-bottom: 1px solid var(--jesty-border); box-shadow: 0 4px 20px var(--jesty-shadow); transform: translateY(-100%); opacity: 0; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; z-index: 99; pointer-events: none; }
       .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
       .nav-link { font-size: 14px; padding: 10px 12px; }
@@ -451,10 +448,10 @@
     <a class="nav-link" href="#variables">Variables</a>
   </div>
   <div class="nav-footer">
-    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
+    <div class="theme-switch" id="theme-switch">
+      <button class="theme-switch-btn active" data-theme="light">Light</button>
+      <button class="theme-switch-btn" data-theme="dark">Dark</button>
+    </div>
   </div>
 </nav>
 <div class="nav-overlay" id="nav-overlay" onclick="document.getElementById('nav-links').classList.remove('open');this.classList.remove('open')"></div>
@@ -1468,16 +1465,22 @@
     card.appendChild(dl);
     accGrid.appendChild(card);
   });
-  // ─── Theme toggle ───
-  const themeToggle = document.getElementById('theme-toggle');
+  // ─── Theme switch ───
+  const themeSwitch = document.getElementById('theme-switch');
   const savedTheme = localStorage.getItem('jestyDSTheme') || 'light';
-  if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeSwitch.querySelector('[data-theme="light"]').classList.remove('active');
+    themeSwitch.querySelector('[data-theme="dark"]').classList.add('active');
+  }
 
-  themeToggle.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const next = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('jestyDSTheme', next);
+  themeSwitch.addEventListener('click', (e) => {
+    const btn = e.target.closest('.theme-switch-btn');
+    if (!btn || btn.classList.contains('active')) return;
+    themeSwitch.querySelectorAll('.theme-switch-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.documentElement.setAttribute('data-theme', btn.dataset.theme);
+    localStorage.setItem('jestyDSTheme', btn.dataset.theme);
   });
 
 })();
