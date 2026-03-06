@@ -157,7 +157,8 @@
     .anim-card:hover { border-color: #CCC7C2; }
     .anim-card-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
     .anim-card-meta { font-size: 10px; color: #9C968F; font-family: monospace; }
-    .anim-card-preview { width: 32px; height: 32px; border-radius: 8px; background: #1C1917; margin: 8px auto; }
+    .anim-card-preview { width: 48px; height: 48px; margin: 8px auto; }
+    .anim-card-preview svg { width: 100%; height: 100%; }
 
     /* Spacing */
     .spacing-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
@@ -920,17 +921,17 @@
 <p class="section-note">Click each card to preview the animation.</p>
 <div class="anim-grid">
   <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='cardBounce 0.6s cubic-bezier(0.36,0.07,0.19,0.97)'">
-    <div class="anim-card-preview"></div>
+    <div class="anim-card-preview" id="anim-preview-bounce"></div>
     <div class="anim-card-name">cardBounce</div>
     <div class="anim-card-meta">0.6s spring</div>
   </div>
   <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275)'">
-    <div class="anim-card-preview" style="border-radius:50%"></div>
+    <div class="anim-card-preview" id="anim-preview-pop"></div>
     <div class="anim-card-name">popIn</div>
     <div class="anim-card-meta">0.5s overshoot</div>
   </div>
   <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='fadeInUp 0.4s ease-out'">
-    <div class="anim-card-preview"></div>
+    <div class="anim-card-preview" id="anim-preview-fade"></div>
     <div class="anim-card-name">fadeInUp</div>
     <div class="anim-card-meta">0.4s ease-out</div>
   </div>
@@ -1244,6 +1245,17 @@
 
     setTimeout(shuffleStep, 80);
   }
+
+  // ─── Animation preview characters ───
+  const animFaces = [
+    { id: 'anim-preview-bounce', expr: 'manic', color: COLORS[0] },
+    { id: 'anim-preview-pop', expr: 'happy', color: COLORS[3] },
+    { id: 'anim-preview-fade', expr: 'smug', color: COLORS[4] }
+  ];
+  animFaces.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (el) { const svg = buildFaceSvg(f.expr, f.color); if (svg) el.appendChild(svg); }
+  });
 
   // ─── Character color tabs & grid ───
   function renderCharTabs() {
