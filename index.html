@@ -1185,8 +1185,10 @@
   }
 
   // ─── Hero background color (random, characters must avoid it) ───
-  const heroBgColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-  document.querySelector('.hero-banner').style.background = heroBgColor.body;
+  let heroBgColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+  const heroBanner = document.querySelector('.hero-banner');
+  heroBanner.style.background = heroBgColor.body;
+  heroBanner.style.transition = 'background 0.5s ease';
 
   // ─── Shuffle hero character (slot machine style — same as sidepanel) ───
   let heroSpinning = false;
@@ -1249,6 +1251,16 @@
     "Entertainment-first tab management for people who find chaos funny, not stressful.",
     "The roast you never asked for but absolutely deserve every time you open a tab.",
     "Turning your chaotic browsing into comedy gold, one brutally honest roast at a time.",
+    "Open a new tab, get roasted. Close a tab, get celebrated. That's the deal.",
+    "A blob with zero chill and full access to everything you're pretending to work on.",
+    "You didn't need another productivity tool. You needed someone to roast your workflow.",
+    "It reads your tabs, picks a mood, and delivers a roast you can't argue with.",
+    "Finally, an extension that treats your browsing habits with the judgment they deserve.",
+    "The only thing standing between you and your 90 open tabs is a sarcastic blob.",
+    "A Chrome extension with opinions. Strong ones. About your 3am shopping habits.",
+    "Your tabs tell a story. This extension just makes sure it's a comedy.",
+    "One blob. Fifteen moods. Unlimited judgment about your questionable browsing choices.",
+    "It knows about the tabs you forgot. It has thoughts. None of them are nice.",
   ];
   let currentHeadlineIndex = 0;
 
@@ -1279,6 +1291,8 @@
   const WORD_BASE_DELAY = 200; // initial delay on page load
 
   function splitIntoWords(container, text) {
+    // Detach button before rebuilding
+    const btn = container.parentElement.querySelector('.hero-shuffle');
     container.innerHTML = '';
     const words = text.split(' ');
     words.forEach((word, i) => {
@@ -1289,7 +1303,17 @@
       inner.className = 'word-inner';
       inner.textContent = word;
       clip.appendChild(inner);
-      container.appendChild(clip);
+      // Wrap last word + button in nowrap span so button never orphans
+      if (i === words.length - 1 && btn) {
+        const nowrap = document.createElement('span');
+        nowrap.style.whiteSpace = 'nowrap';
+        nowrap.appendChild(clip);
+        nowrap.appendChild(document.createTextNode(' '));
+        nowrap.appendChild(btn);
+        container.appendChild(nowrap);
+      } else {
+        container.appendChild(clip);
+      }
     });
   }
 
@@ -1350,7 +1374,11 @@
       } else if (step < phase1Count + phase2Delays.length) {
         setTimeout(shuffleStep, phase2Delays[step - phase1Count]);
       } else {
-        // Land on target
+        // Land on target — also change background color
+        const newBgOptions = COLORS.filter(c => c.label !== heroBgColor.label && c.label !== target.color.label);
+        heroBgColor = newBgOptions[Math.floor(Math.random() * newBgOptions.length)];
+        heroBanner.style.background = heroBgColor.body;
+
         renderHeroCombo(target);
         container.classList.remove('spinning');
         container.classList.add('landing');
