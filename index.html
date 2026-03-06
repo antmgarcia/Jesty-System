@@ -76,6 +76,17 @@
     @keyframes slotSpin { 0% { transform: scale(0.95) rotate(-3deg); } 50% { transform: scale(1.05) rotate(3deg); } 100% { transform: scale(0.95) rotate(-3deg); } }
     @keyframes slotLand { 0% { transform: scale(1); } 50% { transform: scale(1.14); } 100% { transform: scale(1); } }
 
+    /* Hero entrance animations */
+    #hero-headline { display: inline; transition: opacity 0.3s ease, transform 0.3s ease; }
+    #hero-headline.fade-out { opacity: 0; transform: translateY(8px); }
+    #hero-headline.fade-in { animation: headlineIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .hero-shuffle { opacity: 0; animation: btnEntrance 0.5s ease 0.6s forwards; }
+    .hero-shuffle.shuffle-active svg { animation: spinIcon 1.8s linear; }
+    @keyframes headlineIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes btnEntrance { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spinIcon { 0% { transform: rotate(0deg); } 100% { transform: rotate(720deg); } }
+    .hero-title { opacity: 0; animation: headlineIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards; }
+
     /* Page structure */
     h2 { font-size: 28px; font-weight: 700; margin: 80px 0 24px; padding-bottom: 10px; border-bottom: 1px solid #DDD9D5; scroll-margin-top: 24px; }
     h2:first-of-type { margin-top: 0; }
@@ -1268,9 +1279,15 @@
 
     const btn = document.querySelector('.hero-shuffle');
     if (btn) btn.style.pointerEvents = 'none';
+    if (btn) btn.classList.add('shuffle-active');
 
     const container = document.getElementById('hero-character');
+    const headline = document.getElementById('hero-headline');
     const target = randomCombo();
+
+    // Fade out headline
+    headline.classList.remove('fade-in');
+    headline.classList.add('fade-out');
 
     // Add spinning wobble
     container.classList.remove('landing');
@@ -1298,17 +1315,19 @@
         container.classList.add('landing');
 
         // Swap headline to a different roast
-        const headline = document.getElementById('hero-headline');
         let newIndex;
         do { newIndex = Math.floor(Math.random() * HERO_HEADLINES.length); } while (newIndex === currentHeadlineIndex && HERO_HEADLINES.length > 1);
         currentHeadlineIndex = newIndex;
         headline.textContent = HERO_HEADLINES[newIndex];
+        headline.classList.remove('fade-out');
+        headline.classList.add('fade-in');
 
         setTimeout(() => {
           container.classList.remove('landing');
+          headline.classList.remove('fade-in');
           heroSpinning = false;
-          if (btn) btn.style.pointerEvents = '';
-        }, 350);
+          if (btn) { btn.style.pointerEvents = ''; btn.classList.remove('shuffle-active'); }
+        }, 400);
       }
     }
 
