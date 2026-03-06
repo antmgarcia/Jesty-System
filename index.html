@@ -50,10 +50,10 @@
     .hero-character-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; order: 1; }
     .hero-character { width: 220px; }
     .hero-character svg { width: 100%; height: auto; }
-    .hero-shuffle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(255,255,255,0.85); border: 1.5px solid rgba(0,0,0,0.12); border-radius: 50%; color: #1C1917; cursor: pointer; padding: 0; transition: all 0.2s; }
-    .hero-shuffle:hover { background: #fff; border-color: rgba(0,0,0,0.2); }
+    .hero-shuffle { display: flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px; background: none; border: 1.5px solid rgba(0,0,0,0.25); border-radius: 16px; color: #1C1917; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; }
+    .hero-shuffle:hover { border-color: rgba(0,0,0,0.4); background: rgba(0,0,0,0.06); }
     .hero-shuffle:hover svg { transform: rotate(180deg); }
-    .hero-shuffle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
+    .hero-shuffle svg { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.3s ease; }
     .hero-character.spinning { animation: slotSpin 150ms ease-in-out infinite; }
     .hero-character.landing { animation: slotLand 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
     @keyframes slotSpin { 0% { transform: scale(0.95) rotate(-3deg); } 50% { transform: scale(1.05) rotate(3deg); } 100% { transform: scale(0.95) rotate(-3deg); } }
@@ -349,7 +349,8 @@
       .hero-title { font-size: 40px; }
       .hero-desc { font-size: 16px; }
       .hero-character-wrap { order: -1; position: relative; }
-      .hero-shuffle { position: absolute; right: -40px; bottom: 0; }
+      .hero-shuffle { position: absolute; right: -40px; bottom: 0; width: 32px; padding: 0; border-radius: 50%; }
+      .hero-shuffle-label { display: none; }
       .hero-character { width: 260px; }
 
       h2 { font-size: 24px; margin: 56px 0 20px; scroll-margin-top: 64px; }
@@ -439,10 +440,11 @@
   <div class="hero-character-wrap">
     <div class="hero-character" id="hero-character"></div>
     <button class="hero-shuffle" onclick="shuffleHero()" title="Spin again">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
         <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
         <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
       </svg>
+      <span class="hero-shuffle-label">Shuffle</span>
     </button>
   </div>
   <div class="hero-content">
