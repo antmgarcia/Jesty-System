@@ -50,8 +50,8 @@
     .hero-character-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; order: 1; }
     .hero-character { width: 220px; }
     .hero-character svg { width: 100%; height: auto; }
-    .hero-shuffle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #1C1917; border: none; border-radius: 50%; color: #FAF8F5; cursor: pointer; padding: 0; transition: all 0.2s; }
-    .hero-shuffle:hover { background: #292524; color: #fff; }
+    .hero-shuffle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(255,255,255,0.85); border: 1.5px solid rgba(0,0,0,0.12); border-radius: 50%; color: #1C1917; cursor: pointer; padding: 0; transition: all 0.2s; }
+    .hero-shuffle:hover { background: #fff; border-color: rgba(0,0,0,0.2); }
     .hero-shuffle:hover svg { transform: rotate(180deg); }
     .hero-shuffle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
     .hero-character.spinning { animation: slotSpin 150ms ease-in-out infinite; }
