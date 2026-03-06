@@ -37,8 +37,9 @@
     body { padding-left: 200px; }
     .container { max-width: 975px; margin: 0 auto; padding: 0 32px; }
 
-    /* Hero */
-    .hero { display: flex; align-items: center; gap: 48px; padding: 64px 0 48px; }
+    /* Hero banner — full-width bg, content constrained */
+    .hero-banner { background: var(--jesty-bg-secondary); border-bottom: 1px solid var(--jesty-border); }
+    .hero { display: flex; align-items: center; gap: 48px; padding: 64px 32px 48px; max-width: 975px; margin: 0 auto; }
     .hero-content { flex: 1; }
     .hero-title { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
     .hero-desc { font-size: 15px; line-height: 1.65; color: #6B6560; margin-bottom: 20px; }
@@ -339,9 +340,10 @@
       .nav-overlay { display: none; position: fixed; inset: 0; top: 48px; background: rgba(0,0,0,0.3); z-index: 98; }
       .nav-overlay.open { display: block; }
       body { padding-left: 0; }
-      .container { padding: 0 20px; padding-top: 48px; }
+      .container { padding: 0 20px; padding-top: 0; }
+      .hero-banner { margin-top: 48px; }
 
-      .hero { flex-direction: column; gap: 24px; padding: 40px 0 32px; text-align: left; }
+      .hero { flex-direction: column; gap: 24px; padding: 40px 20px 32px; text-align: left; }
       .hero-title { font-size: 40px; }
       .hero-desc { font-size: 16px; }
       .hero-character-wrap { order: -1; position: relative; }
@@ -375,9 +377,9 @@
 
     /* Small mobile: ≤480px */
     @media (max-width: 480px) {
-      .container { padding: 0 16px; padding-top: 48px; }
+      .container { padding: 0 16px; padding-top: 0; }
 
-      .hero { padding: 28px 0 24px; }
+      .hero { padding: 28px 16px 24px; }
       .hero-title { font-size: 32px; letter-spacing: -0.5px; }
       .hero-desc { font-size: 15px; }
       .hero-character { width: 220px; }
@@ -429,9 +431,8 @@
 </nav>
 <div class="nav-overlay" id="nav-overlay" onclick="document.getElementById('nav-links').classList.remove('open');this.classList.remove('open')"></div>
 
-<div class="container">
-
 <!-- ─── HERO ─── -->
+<div class="hero-banner">
 <div class="hero">
   <div class="hero-character-wrap">
     <div class="hero-character" id="hero-character"></div>
@@ -453,6 +454,9 @@
     </p>
   </div>
 </div>
+</div>
+
+<div class="container">
 
 <!-- ─── PROMO FACES STRIP ─── -->
 <div class="promo-faces-strip" id="promo-faces-strip"></div>
