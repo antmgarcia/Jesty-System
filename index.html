@@ -219,9 +219,12 @@
 
     /* Flows */
     .flow { display: flex; align-items: center; gap: 0; margin-bottom: 16px; flex-wrap: wrap; }
-    .flow-step { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--jesty-bg-tertiary); border: 1.5px solid var(--jesty-border); border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--jesty-text); white-space: nowrap; }
+    .flow-step { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--jesty-bg-tertiary); border: 1.5px solid var(--jesty-border); border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--jesty-text); white-space: nowrap; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; cursor: default; }
+    .flow-step:hover { transform: translateY(-2px); border-color: var(--jesty-border-hover); box-shadow: 0 4px 12px var(--jesty-shadow); }
     .flow-step.accent { background: #EAB308; border-color: #EAB308; color: #422006; }
+    .flow-step.accent:hover { border-color: #CA8A04; box-shadow: 0 4px 12px rgba(234,179,8,0.25); }
     .flow-step.dark { background: var(--jesty-btn-bg); border-color: var(--jesty-btn-bg); color: var(--jesty-btn-text); }
+    .flow-step.dark:hover { background: var(--jesty-btn-hover); border-color: var(--jesty-btn-hover); }
     .flow-arrow { color: var(--jesty-text-faint); font-size: 16px; padding: 0 6px; flex-shrink: 0; }
     .flow-label { font-size: 11px; font-weight: 600; color: var(--jesty-text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
 
@@ -510,7 +513,7 @@
   <span class="flow-arrow">&rarr;</span>
   <div class="flow-step accent">Earn XP</div>
   <span class="flow-arrow">&rarr;</span>
-  <div class="flow-step">Level up</div>
+  <div class="flow-step accent">Level up</div>
   <span class="flow-arrow">&rarr;</span>
   <div class="flow-step">Unlock accessory</div>
   <span class="flow-arrow">&rarr;</span>
