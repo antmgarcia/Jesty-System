@@ -43,9 +43,10 @@
     .hero-desc { font-size: 15px; line-height: 1.65; color: #6B6560; margin-bottom: 20px; }
     .hero-meta { font-size: 12px; color: #9C968F; line-height: 1.6; }
     .hero-meta strong { color: #1C1917; font-weight: 600; }
-    .hero-character { width: 180px; flex-shrink: 0; order: 1; }
+    .hero-character-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; order: 1; }
+    .hero-character { width: 220px; }
     .hero-character svg { width: 100%; height: auto; }
-    .hero-shuffle { order: 1; align-self: center; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin-top: -8px; background: none; border: 1.5px solid #DDD9D5; border-radius: 50%; color: #9C968F; cursor: pointer; padding: 0; transition: all 0.2s; }
+    .hero-shuffle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: none; border: 1.5px solid #DDD9D5; border-radius: 50%; color: #9C968F; cursor: pointer; padding: 0; transition: all 0.2s; }
     .hero-shuffle:hover { color: #6B6560; border-color: #CCC7C2; background: #F5F3F0; }
     .hero-shuffle:hover svg { transform: rotate(180deg); }
     .hero-shuffle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
@@ -327,7 +328,8 @@
       .hero { flex-direction: column; gap: 24px; padding: 40px 0 32px; text-align: left; }
       .hero-title { font-size: 40px; }
       .hero-desc { font-size: 16px; }
-      .hero-character { width: 140px; order: -1; }
+      .hero-character-wrap { order: -1; }
+      .hero-character { width: 140px; }
       .hero-shuffle { display: none; }
 
       h2 { font-size: 24px; margin: 56px 0 20px; scroll-margin-top: 64px; }
@@ -415,13 +417,15 @@
 
 <!-- ─── HERO ─── -->
 <div class="hero">
-  <div class="hero-character" id="hero-character"></div>
-  <button class="hero-shuffle" onclick="shuffleHero()" title="Spin again">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
-      <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
-    </svg>
-  </button>
+  <div class="hero-character-wrap">
+    <div class="hero-character" id="hero-character"></div>
+    <button class="hero-shuffle" onclick="shuffleHero()" title="Spin again">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+        <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+      </svg>
+    </button>
+  </div>
   <div class="hero-content">
     <h1 class="hero-title">The Chrome extension that judges your 47 open tabs so you don't have to.</h1>
     <p class="hero-desc">Opening a new browser tab is a subtle but real increase in cognitive load. What starts as a simple action quickly turns into dozens of open tabs that are easy to forget and hard to manage. Most tab management tools respond with metrics and dashboards. Jesty responds with personality.</p>
