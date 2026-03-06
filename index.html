@@ -1148,24 +1148,21 @@
     container.appendChild(svg);
   })();
 
-  // ─── Shuffle hero character ───
-  function shuffleHero() {
+  // ─── Shuffle hero character (slot machine style) ───
+  let heroSpinning = false;
+
+  function renderHeroCombo(expr, color, hatId, glassesId) {
     const container = document.getElementById('hero-character');
     container.innerHTML = '';
-    const expr = EXPRESSIONS[Math.floor(Math.random() * EXPRESSIONS.length)].name;
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
     const svg = buildFaceSvg(expr, color);
     if (!svg) return;
     svg.style.cssText = 'width:100%;height:auto';
 
-    // Random hat (50% chance)
-    const hats = ACCESSORIES.filter(a => a.slot === 'hat');
-    if (Math.random() > 0.4 && hats.length) {
-      const hat = hats[Math.floor(Math.random() * hats.length)];
-      const sym = document.getElementById('acc-' + hat.id);
+    if (hatId) {
+      const sym = document.getElementById('acc-' + hatId);
       if (sym) {
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + hat.id);
+        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + hatId);
         const a = (ANCHORS.hat[expr] || ANCHORS.hat.smug || { x: 38, y: -2 });
         use.setAttribute('x', a.x); use.setAttribute('y', a.y);
         use.setAttribute('width', '60'); use.setAttribute('height', '40');
@@ -1174,14 +1171,11 @@
       }
     }
 
-    // Random glasses (50% chance)
-    const glasses = ACCESSORIES.filter(a => a.slot === 'glasses');
-    if (Math.random() > 0.4 && glasses.length) {
-      const g = glasses[Math.floor(Math.random() * glasses.length)];
-      const sym = document.getElementById('acc-' + g.id);
+    if (glassesId) {
+      const sym = document.getElementById('acc-' + glassesId);
       if (sym) {
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + g.id);
+        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + glassesId);
         const a = (ANCHORS.glasses[expr] || ANCHORS.glasses.smug || { x: 32, y: 42 });
         use.setAttribute('x', a.x); use.setAttribute('y', a.y);
         use.setAttribute('width', '68'); use.setAttribute('height', '24');
@@ -1191,6 +1185,60 @@
     }
 
     container.appendChild(svg);
+  }
+
+  function randomCombo() {
+    const expr = EXPRESSIONS[Math.floor(Math.random() * EXPRESSIONS.length)].name;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const hats = ACCESSORIES.filter(a => a.slot === 'hat');
+    const glasses = ACCESSORIES.filter(a => a.slot === 'glasses');
+    const hat = Math.random() > 0.3 ? hats[Math.floor(Math.random() * hats.length)].id : null;
+    const gl = Math.random() > 0.3 ? glasses[Math.floor(Math.random() * glasses.length)].id : null;
+    return { expr, color, hat, gl };
+  }
+
+  function shuffleHero() {
+    if (heroSpinning) return;
+    heroSpinning = true;
+
+    const btn = document.querySelector('.hero-shuffle');
+    if (btn) btn.style.pointerEvents = 'none';
+
+    const container = document.getElementById('hero-character');
+    const target = randomCombo();
+
+    // Phase 1: fast shuffle (15 steps × 80ms = 1.2s)
+    // Phase 2: decelerate (120ms, 200ms, 350ms)
+    // Phase 3: land on target with bounce
+    const phase1Count = 15;
+    const phase2Delays = [120, 200, 350];
+    let step = 0;
+
+    function shuffleStep() {
+      const c = randomCombo();
+      renderHeroCombo(c.expr, c.color, c.hat, c.gl);
+      step++;
+
+      if (step < phase1Count) {
+        setTimeout(shuffleStep, 80);
+      } else if (step < phase1Count + phase2Delays.length) {
+        setTimeout(shuffleStep, phase2Delays[step - phase1Count]);
+      } else {
+        // Land on target
+        renderHeroCombo(target.expr, target.color, target.hat, target.gl);
+        // Bounce animation on land
+        container.style.animation = 'none';
+        container.offsetHeight;
+        container.style.animation = 'cardBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97)';
+        setTimeout(() => {
+          container.style.animation = '';
+          heroSpinning = false;
+          if (btn) btn.style.pointerEvents = '';
+        }, 600);
+      }
+    }
+
+    setTimeout(shuffleStep, 80);
   }
 
   // ─── Character color tabs & grid ───
