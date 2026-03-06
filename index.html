@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jesty System</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --jesty-bg: #FAF8F5; --jesty-bg-secondary: #F0EDEA; --jesty-bg-tertiary: #F5F3F0;
+      --jesty-text: #1C1917; --jesty-text-secondary: #6B6560; --jesty-text-muted: #9C968F; --jesty-text-faint: #CCC7C2;
+      --jesty-border: #DDD9D5; --jesty-border-hover: #CCC7C2; --jesty-border-strong: #1C1917;
+      --jesty-btn-bg: #1C1917; --jesty-btn-text: #FAF8F5; --jesty-btn-hover: #292524;
+      --jesty-btn-disabled-bg: #DDD9D5; --jesty-btn-disabled-text: #9C968F;
+      --jesty-bubble-bot-bg: #F0EDEA; --jesty-bubble-bot-text: #1C1917;
+      --jesty-bubble-user-bg: #1C1917; --jesty-bubble-user-text: #FAF8F5;
+      --jesty-typing-dot: #CCC7C2;
+      --jesty-overlay: rgba(0,0,0,0.45); --jesty-shadow: rgba(0,0,0,0.10); --jesty-shadow-md: rgba(0,0,0,0.14);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #FAF8F5; color: #1C1917; padding: 0; margin: 0; }
+
+    /* Nav */
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(250,248,245,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #DDD9D5; padding: 12px 32px; display: flex; align-items: center; gap: 24px; overflow: hidden; }
+    .nav-logo { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-face { width: 24px; height: 24px; flex-shrink: 0; border-radius: 6px; }
+    .nav-links { display: flex; gap: 16px; }
+    .nav-link { font-size: 12px; font-weight: 600; color: #9C968F; text-decoration: none; transition: color 0.15s; }
+    .nav-link:hover { color: #1C1917; }
+
+    /* Main container */
+    .container { max-width: 975px; margin: 0 auto; padding: 0 32px; }
+
+    /* Hero */
+    .hero { display: flex; align-items: center; gap: 48px; padding: 64px 0 48px; }
+    .hero-content { flex: 1; }
+    .hero-title { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+    .hero-desc { font-size: 15px; line-height: 1.65; color: #6B6560; margin-bottom: 20px; }
+    .hero-meta { font-size: 12px; color: #9C968F; line-height: 1.6; }
+    .hero-meta strong { color: #1C1917; font-weight: 600; }
+    .hero-character { width: 180px; flex-shrink: 0; }
+    .hero-character svg { width: 100%; height: auto; }
+
+    /* Page structure */
+    h2 { font-size: 28px; font-weight: 700; margin: 80px 0 24px; padding-bottom: 10px; border-bottom: 1px solid #DDD9D5; scroll-margin-top: 64px; }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-size: 13px; font-weight: 700; color: #6B6560; text-transform: uppercase; letter-spacing: 0.05em; margin: 36px 0 16px; }
+    .section-note { font-size: 12px; color: #9C968F; margin-bottom: 20px; }
+
+    /* Swatch grids */
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 32px; }
+    .swatch { border-radius: 12px; overflow: hidden; border: 1px solid #DDD9D5; }
+    .swatch-color { height: 56px; }
+    .swatch-info { padding: 8px 10px; background: #fff; }
+    .swatch-name { font-size: 11px; font-weight: 600; color: #1C1917; }
+    .swatch-hex { font-size: 10px; color: #9C968F; font-family: monospace; }
+
+    /* Token table */
+    .token-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 12px; }
+    .token-table th { text-align: left; font-weight: 600; color: #6B6560; padding: 6px 12px; border-bottom: 1.5px solid #DDD9D5; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .token-table td { padding: 8px 12px; border-bottom: 1px solid #F0EDEA; vertical-align: middle; }
+    .token-table code { font-family: 'DM Mono', monospace; font-size: 11px; background: #F0EDEA; padding: 2px 6px; border-radius: 4px; }
+    .token-dot { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,0.08); }
+
+    /* Component row */
+    .component-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 24px; }
+
+    /* Buttons */
+    .btn-primary { font-family: 'DM Sans'; font-size: 13px; font-weight: 600; color: #FAF8F5; background: #1C1917; border: none; border-radius: 20px; padding: 8px 20px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #292524; transform: scale(1.03); }
+    .btn-primary.disabled { background: #DDD9D5; color: #9C968F; cursor: default; pointer-events: none; }
+    .btn-secondary { font-family: 'DM Sans'; font-size: 13px; font-weight: 600; color: #6B6560; background: none; border: 1.5px solid #DDD9D5; border-radius: 20px; padding: 8px 16px; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { border-color: #1C1917; color: #1C1917; }
+    .btn-text { font-family: 'DM Sans'; font-size: 12px; font-weight: 600; color: #9C968F; background: none; border: none; cursor: pointer; padding: 4px 8px; transition: color 0.2s; }
+    .btn-text:hover { color: #6B6560; }
+    .btn-icon { width: 32px; height: 32px; border-radius: 50%; background: none; border: 1.5px solid #DDD9D5; color: #9C968F; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-icon:hover { color: #1C1917; border-color: #CCC7C2; }
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    /* Cards */
+    .card-demo { background: var(--jesty-bg-tertiary); border: 1.5px solid var(--jesty-border); border-radius: 14px; padding: 14px 16px; }
+    .card-demo-elevated { background: var(--jesty-bg); border: 1.5px solid var(--jesty-border); border-radius: 14px; padding: 14px 16px; box-shadow: 0 4px 20px var(--jesty-shadow-md); }
+    .card-demo-upgrade { background: var(--jesty-bg-tertiary); border-radius: 14px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s; }
+    .card-demo-upgrade:hover { background: var(--jesty-bg-secondary); }
+
+    /* Badges */
+    .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; }
+    .badge { font-family: 'DM Sans'; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em; display: inline-block; }
+    .badge-free { background: #FEF9C3; color: #8A9618; }
+    .badge-premium { background: #F3F0FF; color: #7C5FD6; }
+    .badge-pro { background: #A7F0D4; color: #15875F; }
+    .badge-level { background: #1C1917; color: #FAF8F5; }
+    .chip { font-family: 'DM Sans'; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: 0.02em; line-height: 1.4; display: inline-block; }
+    .chip-xp { background: #FBBF24; color: #78350F; }
+    .chip-xp-dark { background: #EAB308; color: #422006; }
+
+    /* Toast */
+    .toast-demo { display: inline-block; background: #EAB308; color: #422006; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+    /* Chat bubbles */
+    .bubble { padding: 12px 16px; border-radius: 18px; font-size: 14px; max-width: 280px; line-height: 1.5; }
+    .bubble-bot { background: #F0EDEA; color: #1C1917; border-bottom-left-radius: 6px; }
+    .bubble-user { background: #1C1917; color: #FAF8F5; border-bottom-right-radius: 6px; margin-left: auto; }
+
+    /* Character colors */
+    .color-palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 32px; }
+    .color-card { border-radius: 12px; overflow: hidden; border: 1px solid #DDD9D5; text-align: center; }
+    .color-card-swatches { display: grid; grid-template-columns: repeat(4, 1fr); height: 40px; }
+    .color-card-name { font-size: 11px; font-weight: 600; padding: 6px; background: #fff; }
+
+    /* Typography */
+    .type-specimen { margin-bottom: 14px; }
+    .type-meta { font-size: 10px; color: #9C968F; font-family: monospace; margin-top: 2px; }
+
+    /* Input */
+    .input-demo { font-family: 'DM Sans'; font-size: 14px; color: #1C1917; border: 1px solid #DDD9D5; border-radius: 24px; padding: 10px 18px; background: #FAF8F5; outline: none; width: 280px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-demo:focus { border-color: transparent; box-shadow: 0 1px 6px rgba(32,33,36,0.18); }
+
+    /* Toggle */
+    .toggle-group { display: inline-flex; gap: 4px; background: #F0EDEA; border-radius: 10px; padding: 3px; }
+    .toggle-btn { font-family: 'DM Sans'; font-size: 11px; font-weight: 600; padding: 5px 10px; border: none; border-radius: 8px; cursor: pointer; background: none; color: #9C968F; transition: all 0.2s; }
+    .toggle-btn.active { background: #FAF8F5; color: #1C1917; box-shadow: 0 1px 3px rgba(0,0,0,0.14); }
+
+    /* Checkbox */
+    .checkbox-demo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .checkbox-circle { width: 18px; height: 18px; border: 2px solid #CCC7C2; border-radius: 50%; transition: all 0.2s; flex-shrink: 0; }
+    .checkbox-circle.checked { background: #1C1917; border-color: #1C1917; }
+    .checkbox-label { font-size: 13px; }
+    .checkbox-label.checked { text-decoration: line-through; color: #9C968F; }
+
+    /* Shadows */
+    .shadow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .shadow-box { height: 64px; border-radius: 14px; background: #FAF8F5; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9C968F; font-family: monospace; }
+
+    /* Radius */
+    .radius-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-bottom: 32px; }
+    .radius-box { background: #F0EDEA; border: 1.5px solid #DDD9D5; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9C968F; font-family: monospace; }
+
+    /* Animations */
+    .anim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+    .anim-card { background: #F5F3F0; border: 1px solid #DDD9D5; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .anim-card:hover { border-color: #CCC7C2; }
+    .anim-card-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+    .anim-card-meta { font-size: 10px; color: #9C968F; font-family: monospace; }
+    .anim-card-preview { width: 32px; height: 32px; border-radius: 8px; background: #1C1917; margin: 8px auto; }
+
+    /* Spacing */
+    .spacing-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .spacing-bar { height: 12px; background: #A78BFA; border-radius: 3px; }
+    .spacing-label { font-size: 10px; color: #9C968F; font-family: monospace; min-width: 40px; text-align: right; }
+
+    /* Dark mode preview */
+    .dark-preview { background: #18181B; border-radius: 14px; padding: 24px; color: #F4F4F5; margin-bottom: 32px; }
+    .dark-preview .swatch-grid { margin-bottom: 0; }
+    .dark-preview .swatch { border-color: #3F3F46; }
+    .dark-preview .swatch-info { background: #27272A; }
+    .dark-preview .swatch-name { color: #F4F4F5; }
+    .dark-preview .swatch-hex { color: #71717A; }
+
+    /* XP Banner */
+    .xp-banner-demo { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 20px; background: #EAB308; border-radius: 14px; margin-bottom: 12px; }
+    .xp-banner-face { width: 28px; height: 28px; background: #1C1917; border-radius: 50%; }
+    .xp-banner-text { display: flex; flex-direction: column; }
+    .xp-banner-amount { font-size: 18px; font-weight: 800; color: #18181B; letter-spacing: -0.02em; }
+    .xp-banner-label { font-size: 11px; font-weight: 600; color: rgba(24,24,27,0.55); }
+
+    /* Focus Island */
+    .island-demo { background: #18181B; border-radius: 14px; padding: 32px; display: flex; align-items: end; gap: 16px; position: relative; min-height: 160px; }
+    .island-circle { width: 52px; height: 52px; border-radius: 50%; background: #18181B; box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 2px rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; }
+    .island-badge-demo { position: absolute; bottom: 22px; left: 54px; background: #18181B; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); font-variant-numeric: tabular-nums; }
+    .island-expand-demo { display: flex; align-items: center; height: 40px; background: #FAF8F5; border: 1.5px solid #DDD9D5; border-left: none; border-radius: 0 20px 20px 0; padding: 0 16px 0 14px; margin-left: -6px; }
+    .island-expand-demo span { font-size: 12px; font-weight: 600; color: #6B6560; }
+    .island-action-demo { width: 30px; height: 30px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid #DDD9D5; color: #6B6560; display: flex; align-items: center; justify-content: center; }
+
+    /* Grid card (shared for expressions & accessories) */
+    .grid-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px 12px; background: #fff; border-radius: 14px; border: 1px solid #DDD9D5; transition: border-color 0.15s, transform 0.2s ease, box-shadow 0.2s ease; cursor: default; }
+    .grid-card:hover { border-color: #CCC7C2; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .grid-card svg { width: 80px; height: 74px; }
+    .grid-card-label { font-size: 12px; font-weight: 600; text-transform: capitalize; }
+    .grid-card-dl { font-family: 'DM Sans'; font-size: 11px; font-weight: 500; color: #9C968F; background: none; border: none; cursor: pointer; padding: 2px 6px; transition: color 0.15s; }
+    .grid-card-dl:hover { color: #1C1917; }
+
+    /* Accessory card (smaller) */
+    .acc-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 10px; background: #fff; border-radius: 14px; border: 1px solid #DDD9D5; transition: border-color 0.15s, transform 0.2s ease, box-shadow 0.2s ease; cursor: default; }
+    .acc-card:hover { border-color: #CCC7C2; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .acc-card svg { width: 56px; height: 40px; }
+    .acc-card-name { font-size: 11px; font-weight: 600; text-align: center; }
+
+    /* Color tabs */
+    .color-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .color-tab { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; border: 1.5px solid #DDD9D5; background: none; cursor: pointer; font-family: 'DM Sans'; font-size: 12px; font-weight: 600; color: #6B6560; transition: all 0.2s; }
+    .color-tab:hover { border-color: #CCC7C2; }
+    .color-tab.active { border-color: #1C1917; color: #1C1917; }
+    .color-tab-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+    /* Surfaces */
+    .surface-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .surface-card { background: #fff; border: 1.5px solid var(--jesty-border); border-radius: 14px; padding: 20px; }
+    .surface-card-icon { font-size: 20px; margin-bottom: 8px; }
+    .surface-card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .surface-card-desc { font-size: 12px; color: var(--jesty-text-secondary); line-height: 1.5; }
+
+    /* Flows */
+    .flow { display: flex; align-items: center; gap: 0; margin-bottom: 16px; flex-wrap: wrap; }
+    .flow-step { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--jesty-bg-tertiary); border: 1.5px solid var(--jesty-border); border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--jesty-text); white-space: nowrap; }
+    .flow-step.accent { background: #EAB308; border-color: #EAB308; color: #422006; }
+    .flow-step.dark { background: var(--jesty-btn-bg); border-color: var(--jesty-btn-bg); color: var(--jesty-btn-text); }
+    .flow-arrow { color: var(--jesty-text-faint); font-size: 16px; padding: 0 6px; flex-shrink: 0; }
+    .flow-label { font-size: 11px; font-weight: 600; color: var(--jesty-text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Tier cards (matches sidepanel) */
+    .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .tier-card { background: var(--jesty-bg); border: 1.5px solid var(--jesty-border); border-radius: 14px; padding: 16px; transition: all 0.2s; }
+    .tier-card.highlighted { border-color: var(--jesty-border-strong); box-shadow: 0 2px 12px var(--jesty-shadow-md); }
+    .tier-card-top { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 16px; text-align: center; }
+    .tier-card-top-info { flex: 1; min-width: 0; }
+    .tier-card-character { position: relative; display: flex; align-items: center; justify-content: center; width: 52px; height: 48px; flex-shrink: 0; }
+    .tier-card-character-bg { position: absolute; inset: 2px; border-radius: 50%; opacity: 0.18; }
+    .tier-card-character svg { position: relative; width: 52px; height: 48px; }
+    .tier-card-header { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .tier-card-name { font-size: 15px; font-weight: 700; color: var(--jesty-text); }
+    .tier-card-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .tier-card-price { font-size: 20px; font-weight: 700; color: var(--jesty-text); }
+    .tier-card-price span { font-size: 12px; font-weight: 500; color: var(--jesty-text-muted); }
+    .tier-card-features { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; padding: 0; }
+    .tier-card-features:last-child { margin-bottom: 0; }
+    .tier-card-features li { font-size: 12px; color: var(--jesty-text-secondary); display: flex; align-items: center; gap: 6px; line-height: 1.3; }
+    .tier-card-features li::before { content: '\2713'; font-size: 11px; font-weight: 700; color: var(--jesty-text); flex-shrink: 0; }
+    .tier-card-cta { width: 100%; padding: 10px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .tier-card-cta.primary { background: var(--jesty-btn-bg); color: var(--jesty-btn-text); }
+    .tier-card-cta.primary:hover { background: var(--jesty-btn-hover); transform: scale(1.03); }
+    .tier-card-cta.secondary { background: var(--jesty-bg); color: var(--jesty-text); border: 1.5px solid var(--jesty-border); }
+    .tier-card-cta.secondary:hover { border-color: var(--jesty-text); }
+
+    /* Promo faces strip */
+    .promo-faces-strip {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 6px; padding: 40px 0 56px;
+    }
+    .promo-face { flex-shrink: 0; }
+    .promo-face svg { display: block; width: 100%; height: 100%; }
+    .promo-face-1 { width: 52px; height: 50px; animation: promoBob 3s ease-in-out infinite; }
+    .promo-face-2 { width: 44px; height: 42px; animation: promoBob 3s ease-in-out 0.5s infinite; }
+    .promo-face-3 { width: 64px; height: 62px; animation: promoBob 3s ease-in-out 1s infinite; }
+    .promo-face-4 { width: 40px; height: 38px; animation: promoBob 3s ease-in-out 1.5s infinite; }
+    .promo-face-5 { width: 50px; height: 48px; animation: promoBob 3s ease-in-out 2s infinite; }
+    @keyframes promoBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Stat pill */
+    .stat-pill-demo { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--jesty-bg-tertiary); border-radius: 14px; border: 1.5px solid var(--jesty-border); }
+    .stat-pill-value { font-size: 14px; font-weight: 700; }
+    .stat-pill-label { font-size: 12px; color: var(--jesty-text-muted); }
+
+    @keyframes cardBounce { 0%{transform:translateY(0) scale(1)} 15%{transform:translateY(-12px) scale(1.03)} 30%{transform:translateY(0) scale(1)} 45%{transform:translateY(-6px) scale(1.015)} 60%{transform:translateY(0) scale(1)} 75%{transform:translateY(-2px)} 100%{transform:translateY(0) scale(1)} }
+    @keyframes popIn { 0%{transform:scale(0);opacity:0} 50%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+    @keyframes fadeInUp { 0%{opacity:0;transform:translateY(20px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes xpWinSlideIn { 0%{transform:translateY(-100%)} 100%{transform:translateY(0)} }
+    @keyframes xpWinSlideOut { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-100%);opacity:0} }
+    @keyframes xpWinPop { 0%{transform:scale(0.5);opacity:0} 60%{transform:scale(1.3)} 100%{transform:scale(1);opacity:1} }
+    @keyframes xpWinBounce { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-12deg)} 75%{transform:rotate(12deg)} }
+    .play-bounce { animation: cardBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+    .play-pop { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .play-fade { animation: fadeInUp 0.4s ease-out; }
+
+    /* XP Banner interactive */
+    .xp-banner-interactive { position: relative; border-radius: 14px; cursor: pointer; margin-bottom: 12px; height: 56px; overflow: hidden; }
+    .xp-banner-content {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: #EAB308; border-radius: 14px;
+      transform: translateY(-100%);
+    }
+    .xp-banner-interactive.playing .xp-banner-content {
+      animation: xpWinSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                 xpWinSlideOut 0.4s ease-in 2s forwards;
+    }
+    .xp-banner-interactive.playing .xp-banner-face-icon { animation: xpWinBounce 0.5s ease 0.3s; }
+    .xp-banner-interactive.playing .xp-win-amount { animation: xpWinPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both; }
+    .xp-banner-play-hint {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: #78350F; background: rgba(234,179,8,0.15);
+      border: 1.5px dashed #EAB308; border-radius: 14px; transition: opacity 0.2s;
+    }
+    .xp-banner-interactive.playing .xp-banner-play-hint { opacity: 0; pointer-events: none; }
+
+    /* Upgrade card interactive */
+    .upgrade-card-interactive { position: relative; transition: all 0.2s; cursor: pointer; }
+    .upgrade-card-interactive.bounce {
+      animation: cardBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+      box-shadow: 0 0 0 2px #EAB308, 0 4px 20px rgba(234, 179, 8, 0.35);
+    }
+    .upgrade-card-interactive.bounce::after {
+      content: ''; position: absolute; inset: -2px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(234,179,8,0.25) 0%, transparent 50%, rgba(234,179,8,0.15) 100%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <span class="nav-logo"><img class="nav-logo-face" src="assets/icon.svg" alt="Jesty">Jesty System</span>
+  <div class="nav-links">
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#characters">Characters</a>
+    <a class="nav-link" href="#accessories">Accessories</a>
+    <a class="nav-link" href="#tokens">Tokens</a>
+    <a class="nav-link" href="#colors">Colors</a>
+    <a class="nav-link" href="#typography">Typography</a>
+    <a class="nav-link" href="#components">Components</a>
+    <a class="nav-link" href="#spatial">Spatial</a>
+    <a class="nav-link" href="#animations">Animations</a>
+    <a class="nav-link" href="#variables">Variables</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">The Chrome extension that judges your 47 open tabs so you don't have to.</h1>
+    <p class="hero-desc">Opening a new browser tab is a subtle but real increase in cognitive load. What starts as a simple action quickly turns into dozens of open tabs that are easy to forget and hard to manage. Most tab management tools respond with metrics and dashboards. Jesty responds with personality.</p>
+    <p class="hero-desc" style="margin-bottom:32px">Every time you open a new tab, Jesty reads your tab titles, picks a mood, and delivers a roast tailored to your current browser chaos. Entertainment-first with a productivity wrapper. The product is the joke. The character is the product. The user is the punchline.</p>
+    <p class="hero-meta">
+      <strong>Target:</strong> Tab hoarders who find it funny, not stressful. Personality-driven product enthusiasts. Social sharers. Procrastinators with a sense of humor.<br>
+      <strong>Category:</strong> Entertainment / browser personality<br>
+      <strong>Stack:</strong> Chrome Extension (Manifest V3) &middot; OpenAI GPT-4o-mini &middot; DM Sans &middot; SVG characters
+    </p>
+  </div>
+  <div class="hero-character" id="hero-character"></div>
+</div>
+
+<!-- ─── PROMO FACES STRIP ─── -->
+<div class="promo-faces-strip" id="promo-faces-strip"></div>
+
+<!-- ─── FEATURES & FLOWS ─── -->
+<h2 id="features">Features & Flows</h2>
+
+<h3>Surfaces</h3>
+<div class="surface-grid">
+  <div class="surface-card">
+    <div class="surface-card-icon">&#9633;</div>
+    <div class="surface-card-title">New Tab Page</div>
+    <div class="surface-card-desc">Hero character + AI roast on every new tab. Google search bar, share button, talk back, refresh. Welcome flow on first visit.</div>
+  </div>
+  <div class="surface-card">
+    <div class="surface-card-icon">&#9654;</div>
+    <div class="surface-card-title">Side Panel</div>
+    <div class="surface-card-desc">Chat drawer, live comments, settings, accessories, tasks, Fun Zone games, Focus Time, tier overlay, XP progression.</div>
+  </div>
+  <div class="surface-card">
+    <div class="surface-card-icon">&#9881;</div>
+    <div class="surface-card-title">Background Worker</div>
+    <div class="surface-card-desc">Tab tracking, action detection (tab closed = celebration), payment flow, focus mode blocking, daily report, subscription check.</div>
+  </div>
+</div>
+
+<h3>Core Flows</h3>
+
+<div class="flow-label">Roast Flow</div>
+<div class="flow">
+  <div class="flow-step">Open new tab</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Fetch tabs + context</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step dark">AI generates roast</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Display + set mood</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Share / Talk Back / Refresh</div>
+</div>
+
+<div class="flow-label">Action &rarr; Reward</div>
+<div class="flow">
+  <div class="flow-step">Chat 3rd reply</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Jesty dares: close a tab</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">User closes tab</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step accent">Celebration + XP</div>
+</div>
+
+<div class="flow-label">Focus Time</div>
+<div class="flow">
+  <div class="flow-step">Start focus</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Island on all tabs</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Distractions blocked</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">End &rarr; "Done!"</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step accent">+XP reward</div>
+</div>
+
+<div class="flow-label">Progression Loop</div>
+<div class="flow" style="margin-bottom:32px">
+  <div class="flow-step">Play game / close tab / focus</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step accent">Earn XP</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Level up</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Unlock accessory</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Equip &amp; flex</div>
+</div>
+
+<h3>Tier Features</h3>
+<div class="tier-cards" id="tier-cards-demo">
+  <!-- Suspect -->
+  <div class="tier-card">
+    <div class="tier-card-top">
+      <div class="tier-card-character" id="tier-face-free">
+        <div class="tier-card-character-bg" style="background:#EBF34F"></div>
+      </div>
+      <div class="tier-card-top-info">
+        <div class="tier-card-header">
+          <span class="tier-card-name">Suspect</span>
+          <span class="tier-card-badge badge-free">Under observation</span>
+        </div>
+        <div class="tier-card-price">Free</div>
+      </div>
+    </div>
+    <ul class="tier-card-features">
+      <li>12 roasts per day</li>
+      <li>7 character moods</li>
+      <li>Side panel chat</li>
+      <li>Share branded image</li>
+      <li>4 free accessories</li>
+    </ul>
+  </div>
+  <!-- Guilty -->
+  <div class="tier-card highlighted">
+    <div class="tier-card-top">
+      <div class="tier-card-character" id="tier-face-premium">
+        <div class="tier-card-character-bg" style="background:#FF8FA3"></div>
+      </div>
+      <div class="tier-card-top-info">
+        <div class="tier-card-header">
+          <span class="tier-card-name">Guilty</span>
+          <span class="tier-card-badge badge-premium">Full judgement</span>
+        </div>
+        <div class="tier-card-price">$5 <span>once</span></div>
+      </div>
+    </div>
+    <ul class="tier-card-features">
+      <li>Unlimited roasts &amp; chat</li>
+      <li>+3 moods (impressed, manic, petty)</li>
+      <li>Focus Time + island UI</li>
+      <li>Tasks with checklists</li>
+      <li>All games unlocked</li>
+      <li>XP &amp; level progression</li>
+      <li>+15 accessories (Lv6-20)</li>
+    </ul>
+    <button class="tier-card-cta primary">Plead Guilty &mdash; $5</button>
+  </div>
+  <!-- Sentenced -->
+  <div class="tier-card">
+    <div class="tier-card-top">
+      <div class="tier-card-character" id="tier-face-pro">
+        <div class="tier-card-character-bg" style="background:#34D399"></div>
+      </div>
+      <div class="tier-card-top-info">
+        <div class="tier-card-header">
+          <span class="tier-card-name">Sentenced</span>
+          <span class="tier-card-badge badge-pro">No escape</span>
+        </div>
+        <div class="tier-card-price">$5 <span>/mo</span></div>
+      </div>
+    </div>
+    <ul class="tier-card-features">
+      <li>Everything in Guilty</li>
+      <li>+3 moods (chaotic, dramatic, tender)</li>
+      <li>Google Calendar integration</li>
+      <li>Schedule-aware roasts</li>
+      <li>Evolution stages (glow at Lv20)</li>
+      <li>+3 exclusive accessories</li>
+    </ul>
+    <button class="tier-card-cta secondary">Get Sentenced &mdash; $5/mo</button>
+  </div>
+</div>
+
+<!-- ─── CHARACTER EXPRESSIONS ─── -->
+<h2 id="characters">Character Expressions</h2>
+<p class="section-note">15 expressions &times; 6 colors. Source color is Lime (#EBF34F), recolored at runtime via color replacement maps. Click download to export any combination as SVG.</p>
+
+<div class="color-tabs" id="char-color-tabs"></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px;margin-bottom:16px" id="char-grid"></div>
+
+<h3>Expression Reference</h3>
+<table class="token-table" style="margin-bottom:56px">
+  <tr><th>Expression</th><th>Tier</th><th>When Used</th></tr>
+  <tr><td>smug</td><td><span class="badge badge-free">Free</span></td><td>Default, good roast delivered</td></tr>
+  <tr><td>suspicious</td><td><span class="badge badge-free">Free</span></td><td>Caught sketchy behavior</td></tr>
+  <tr><td>yikes</td><td><span class="badge badge-free">Free</span></td><td>Awkward / embarrassing tabs</td></tr>
+  <tr><td>eyeroll</td><td><span class="badge badge-free">Free</span></td><td>Predictable behavior</td></tr>
+  <tr><td>disappointed</td><td><span class="badge badge-free">Free</span></td><td>Expected better</td></tr>
+  <tr><td>melting</td><td><span class="badge badge-free">Free</span></td><td>Chaotic mess</td></tr>
+  <tr><td>dead</td><td><span class="badge badge-free">Free</span></td><td>Brutal roast</td></tr>
+  <tr><td>thinking</td><td><span class="badge badge-level">System</span></td><td>Loading / generating</td></tr>
+  <tr><td>happy</td><td><span class="badge badge-level">System</span></td><td>Milestone, celebration</td></tr>
+  <tr><td>impressed</td><td><span class="badge badge-premium">Guilty</span></td><td>Genuinely taken aback</td></tr>
+  <tr><td>manic</td><td><span class="badge badge-premium">Guilty</span></td><td>Unhinged energy</td></tr>
+  <tr><td>petty</td><td><span class="badge badge-premium">Guilty</span></td><td>Nitpicky detail</td></tr>
+  <tr><td>chaotic</td><td><span class="badge badge-pro">Sentenced</span></td><td>Fever dream energy</td></tr>
+  <tr><td>dramatic</td><td><span class="badge badge-pro">Sentenced</span></td><td>Soap opera reaction</td></tr>
+  <tr><td>tender</td><td><span class="badge badge-pro">Sentenced</span></td><td>Rare soft moment</td></tr>
+</table>
+
+<!-- ─── ACCESSORIES ─── -->
+<h2 id="accessories">Accessories</h2>
+<p class="section-note">22 accessories across 2 slots (hat, glasses). Free items unlock with level. Guilty (premium) and Sentenced (pro) require tier + level. Download any accessory as SVG.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:24px" id="acc-grid"></div>
+
+<h3>Accessory Catalog</h3>
+<table class="token-table" style="margin-bottom:32px">
+  <tr><th>Lv</th><th>Name</th><th>Slot</th><th>Tier</th></tr>
+  <tr><td>2</td><td>Party Hat</td><td>hat</td><td><span class="badge badge-free">Free</span></td></tr>
+  <tr><td>3</td><td>Sunglasses</td><td>glasses</td><td><span class="badge badge-free">Free</span></td></tr>
+  <tr><td>4</td><td>Bandana</td><td>hat</td><td><span class="badge badge-free">Free</span></td></tr>
+  <tr><td>5</td><td>Heart Shades</td><td>glasses</td><td><span class="badge badge-free">Free</span></td></tr>
+  <tr><td>6</td><td>Beanie</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>7</td><td>Aviators</td><td>glasses</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>8</td><td>Chef Hat</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>9</td><td>3D Glasses</td><td>glasses</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>10</td><td>Monocle</td><td>glasses</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>11</td><td>Propeller Hat</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>12</td><td>Star Glasses</td><td>glasses</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>13</td><td>Crown</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>14</td><td>Bow Tie</td><td>glasses</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>15</td><td>Detective Hat</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>16</td><td>Headband</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>17</td><td>Viking Helmet</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>18</td><td>Top Hat</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>19</td><td>Pirate Hat</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>20</td><td>Halo</td><td>hat</td><td><span class="badge badge-premium">Guilty</span></td></tr>
+  <tr><td>&mdash;</td><td>Flame Crown</td><td>hat</td><td><span class="badge badge-pro">Sentenced</span></td></tr>
+  <tr><td>&mdash;</td><td>Neon Shades</td><td>glasses</td><td><span class="badge badge-pro">Sentenced</span></td></tr>
+  <tr><td>&mdash;</td><td>Wizard Hat</td><td>hat</td><td><span class="badge badge-pro">Sentenced</span></td></tr>
+</table>
+
+<!-- ─── THEME TOKENS ─── -->
+<h2 id="tokens">Theme Tokens (Light)</h2>
+
+<h3>Backgrounds</h3>
+<div class="swatch-grid">
+  <div class="swatch"><div class="swatch-color" style="background:#FAF8F5"></div><div class="swatch-info"><div class="swatch-name">bg</div><div class="swatch-hex">#FAF8F5</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#F0EDEA"></div><div class="swatch-info"><div class="swatch-name">bg-secondary</div><div class="swatch-hex">#F0EDEA</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#F5F3F0"></div><div class="swatch-info"><div class="swatch-name">bg-tertiary</div><div class="swatch-hex">#F5F3F0</div></div></div>
+</div>
+
+<h3>Text</h3>
+<div class="swatch-grid">
+  <div class="swatch"><div class="swatch-color" style="background:#1C1917"></div><div class="swatch-info"><div class="swatch-name">text</div><div class="swatch-hex">#1C1917</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#6B6560"></div><div class="swatch-info"><div class="swatch-name">text-secondary</div><div class="swatch-hex">#6B6560</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#9C968F"></div><div class="swatch-info"><div class="swatch-name">text-muted</div><div class="swatch-hex">#9C968F</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#CCC7C2"></div><div class="swatch-info"><div class="swatch-name">text-faint</div><div class="swatch-hex">#CCC7C2</div></div></div>
+</div>
+
+<h3>Borders</h3>
+<div class="swatch-grid">
+  <div class="swatch"><div class="swatch-color" style="background:#DDD9D5"></div><div class="swatch-info"><div class="swatch-name">border</div><div class="swatch-hex">#DDD9D5</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#CCC7C2"></div><div class="swatch-info"><div class="swatch-name">border-hover</div><div class="swatch-hex">#CCC7C2</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#1C1917"></div><div class="swatch-info"><div class="swatch-name">border-strong</div><div class="swatch-hex">#1C1917</div></div></div>
+</div>
+
+<h3>Buttons</h3>
+<div class="swatch-grid">
+  <div class="swatch"><div class="swatch-color" style="background:#1C1917"></div><div class="swatch-info"><div class="swatch-name">btn-bg</div><div class="swatch-hex">#1C1917</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#FAF8F5"></div><div class="swatch-info"><div class="swatch-name">btn-text</div><div class="swatch-hex">#FAF8F5</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#292524"></div><div class="swatch-info"><div class="swatch-name">btn-hover</div><div class="swatch-hex">#292524</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#DDD9D5"></div><div class="swatch-info"><div class="swatch-name">btn-disabled-bg</div><div class="swatch-hex">#DDD9D5</div></div></div>
+</div>
+
+<!-- ─── DARK THEME ─── -->
+<h2 id="dark-tokens">Theme Tokens (Dark)</h2>
+<div class="dark-preview">
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#18181B"></div><div class="swatch-info"><div class="swatch-name">bg</div><div class="swatch-hex">#18181B</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#27272A"></div><div class="swatch-info"><div class="swatch-name">bg-secondary</div><div class="swatch-hex">#27272A</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1F1F23"></div><div class="swatch-info"><div class="swatch-name">bg-tertiary</div><div class="swatch-hex">#1F1F23</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F4F4F5"></div><div class="swatch-info"><div class="swatch-name">text</div><div class="swatch-hex">#F4F4F5</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A1A1AA"></div><div class="swatch-info"><div class="swatch-name">text-secondary</div><div class="swatch-hex">#A1A1AA</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#3F3F46"></div><div class="swatch-info"><div class="swatch-name">border</div><div class="swatch-hex">#3F3F46</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F4F4F5"></div><div class="swatch-info"><div class="swatch-name">btn-bg</div><div class="swatch-hex">#F4F4F5</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E4E4E7"></div><div class="swatch-info"><div class="swatch-name">btn-hover</div><div class="swatch-hex">#E4E4E7</div></div></div>
+  </div>
+</div>
+
+<!-- ─── CHARACTER COLORS ─── -->
+<h2 id="colors">Character Colors</h2>
+<p class="section-note">6 palettes. Each has body, limb, shadow, highlight. Default is Purple. Source SVGs use Lime; recolored at runtime.</p>
+<div class="color-palette">
+  <div class="color-card"><div class="color-card-swatches"><div style="background:#EBF34F"></div><div style="background:#C8D132"></div><div style="background:#8A9618"></div><div style="background:#F8FBCE"></div></div><div class="color-card-name">Lime</div></div>
+  <div class="color-card"><div class="color-card-swatches"><div style="background:#FF8FA3"></div><div style="background:#E0637A"></div><div style="background:#B84D60"></div><div style="background:#FFD4DC"></div></div><div class="color-card-name">Pink</div></div>
+  <div class="color-card"><div class="color-card-swatches"><div style="background:#87CEEB"></div><div style="background:#5BAED4"></div><div style="background:#3A8CB5"></div><div style="background:#C8E8F5"></div></div><div class="color-card-name">Sky</div></div>
+  <div class="color-card" style="border-color:#A78BFA;border-width:2px"><div class="color-card-swatches"><div style="background:#A78BFA"></div><div style="background:#7C5FD6"></div><div style="background:#5B3FB5"></div><div style="background:#D4C8FD"></div></div><div class="color-card-name">Purple (default)</div></div>
+  <div class="color-card"><div class="color-card-swatches"><div style="background:#34D399"></div><div style="background:#1EB57F"></div><div style="background:#15875F"></div><div style="background:#A7F0D4"></div></div><div class="color-card-name">Mint</div></div>
+  <div class="color-card"><div class="color-card-swatches"><div style="background:#FDBA74"></div><div style="background:#E09550"></div><div style="background:#B87638"></div><div style="background:#FEE0C0"></div></div><div class="color-card-name">Peach</div></div>
+</div>
+
+<h3>Accent Colors</h3>
+<div class="swatch-grid">
+  <div class="swatch"><div class="swatch-color" style="background:#EAB308"></div><div class="swatch-info"><div class="swatch-name">XP Gold</div><div class="swatch-hex">#EAB308</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#FBBF24"></div><div class="swatch-info"><div class="swatch-name">XP Amber</div><div class="swatch-hex">#FBBF24</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#EF4444"></div><div class="swatch-info"><div class="swatch-name">Error / Delete</div><div class="swatch-hex">#EF4444</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#34D399"></div><div class="swatch-info"><div class="swatch-name">Success / Match</div><div class="swatch-hex">#34D399</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#3B82F6"></div><div class="swatch-info"><div class="swatch-name">Calendar Blue</div><div class="swatch-hex">#3B82F6</div></div></div>
+</div>
+
+<!-- ─── TYPOGRAPHY ─── -->
+<h2 id="typography">Typography</h2>
+<p class="section-note">Font: DM Sans. Weights: 400, 500, 600, 700, 800.</p>
+
+<div class="type-specimen"><span style="font-size:56px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1">12:34</span><div class="type-meta">56px / 700 / tabular-nums / -2px tracking -- Focus Time timer</div></div>
+<div class="type-specimen"><span style="font-size:28px;font-weight:800">Design System</span><div class="type-meta">28px / 800 -- Page title, complete screen title</div></div>
+<div class="type-specimen"><span style="font-size:24px;font-weight:600">Your tabs are a mess</span><div class="type-meta">24px / 600 -- Hero quote (new tab roast)</div></div>
+<div class="type-specimen"><span style="font-size:20px;font-weight:700">Task Detail</span><div class="type-meta">20px / 700 -- Section heading, complete stat value</div></div>
+<div class="type-specimen"><span style="font-size:18px;font-weight:800">+25 XP</span><div class="type-meta">18px / 800 -- XP banner amount, game stat values (tabular-nums)</div></div>
+<div class="type-specimen"><span style="font-size:15px;font-weight:700">Level 5 Unlocked</span><div class="type-meta">15px / 700 -- Card title</div></div>
+<div class="type-specimen"><span style="font-size:14px;font-weight:700">247</span> <span style="font-size:12px;color:#9C968F">roasts</span><div class="type-meta">14px / 700 -- Stat pill value &middot; 12px / 400 -- Stat pill label</div></div>
+<div class="type-specimen"><span style="font-size:14px;font-weight:600">Chat message text</span><div class="type-meta">14px / 600 -- Body text, chat input</div></div>
+<div class="type-specimen"><span style="font-size:13px;font-weight:600">Button Label</span><div class="type-meta">13px / 600 -- Buttons, card titles, settings labels</div></div>
+<div class="type-specimen"><span style="font-size:12px;font-weight:600">Stat label</span><div class="type-meta">12px / 600 -- Labels, captions, island end button, XP toast</div></div>
+<div class="type-specimen"><span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#9C968F">Section Label</span><div class="type-meta">11px / 600 -- Uppercase section label, tooltip, XP banner sublabel</div></div>
+<div class="type-specimen"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em">Badge Text</span><div class="type-meta">10px / 700 -- Tier badges, island timer badge (tabular-nums)</div></div>
+<div class="type-specimen"><span style="font-size:9px;font-weight:700;letter-spacing:0.02em">Chip Text</span><div class="type-meta">9px / 700 -- XP chips</div></div>
+
+<!-- ─── COMPONENTS ─── -->
+<h2 id="components">Components</h2>
+
+<h3>Buttons: Primary (Dark Pill)</h3>
+<div class="component-row">
+  <button class="btn-primary">Roast me now</button>
+  <button class="btn-primary">Next Level</button>
+  <button class="btn-primary disabled">Disabled</button>
+</div>
+<div class="type-meta" style="margin-bottom:28px">13px/600 -- padding: 8px 20px -- border-radius: 20px -- hover: scale(1.03)</div>
+
+<h3>Buttons: Secondary (Outline)</h3>
+<div class="component-row">
+  <button class="btn-secondary">Customize</button>
+  <button class="btn-secondary">Share</button>
+</div>
+<div class="type-meta" style="margin-bottom:28px">13px/600 -- padding: 8px 16px -- border: 1.5px solid -- border-radius: 20px</div>
+
+<h3>Buttons: Text</h3>
+<div class="component-row">
+  <button class="btn-text">Replay</button>
+  <button class="btn-text">Cancel</button>
+  <button class="btn-text">See all plans</button>
+</div>
+<div class="type-meta" style="margin-bottom:28px">12px/600 -- no border, no bg -- color: text-muted</div>
+
+<h3>Buttons: Icon</h3>
+<div class="component-row">
+  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg></button>
+  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+</div>
+<div class="type-meta" style="margin-bottom:28px">32px circle -- border: 1.5px solid -- icon: 16px</div>
+
+<h3>Tier Badges</h3>
+<div class="badge-row">
+  <span class="badge badge-free">Suspect</span>
+  <span class="badge badge-premium">Guilty</span>
+  <span class="badge badge-pro">Sentenced</span>
+  <span class="badge badge-level">Lv5</span>
+</div>
+
+<h3>XP Chips</h3>
+<div class="badge-row">
+  <span class="chip chip-xp">Play to level up</span>
+  <span class="chip chip-xp">Earn XP</span>
+</div>
+
+<h3>XP Toast (New Tab)</h3>
+<div class="badge-row" style="margin-bottom:32px">
+  <span class="toast-demo">+10 XP</span>
+  <span class="toast-demo">+25 XP</span>
+</div>
+
+<h3>XP Win Banner</h3>
+<div class="xp-banner-interactive" id="xp-banner-demo" onclick="playXPBanner()">
+  <div class="xp-banner-play-hint">Click to preview animation</div>
+  <div class="xp-banner-content">
+    <div class="xp-banner-face-icon" id="xp-banner-face" style="flex-shrink:0;display:flex;align-items:center"></div>
+    <div style="display:flex;flex-direction:column">
+      <span class="xp-win-amount" style="font-size:18px;font-weight:800;color:#18181B;letter-spacing:-0.02em">+25 XP</span>
+      <span style="font-size:11px;font-weight:600;color:rgba(24,24,27,0.55)">Tab closed!</span>
+    </div>
+  </div>
+</div>
+<div class="type-meta" style="margin-bottom:32px">Slide in: 0.4s strong-bounce -- Amount: popIn 0.5s -- Face: bounce wiggle 0.5s -- Auto-hide: slideOut 0.4s after 2s</div>
+
+<h3>Stat Pills</h3>
+<div class="component-row" style="margin-bottom:32px">
+  <div class="stat-pill-demo"><span class="stat-pill-value">247</span><span class="stat-pill-label">roasts</span></div>
+  <div class="stat-pill-demo"><span class="stat-pill-value">5</span><span class="stat-pill-label">streak</span></div>
+  <div class="stat-pill-demo"><span class="stat-pill-value">Lv8</span><span class="stat-pill-label">level</span></div>
+</div>
+
+<h3>Cards</h3>
+<div class="component-row" style="gap:16px;margin-bottom:24px">
+  <div class="card-demo" style="width:220px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Standard Card</div>
+    <div style="font-size:12px;color:#9C968F">bg-tertiary, 1.5px border, 14px radius</div>
+  </div>
+  <div class="card-demo-elevated" style="width:220px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Elevated Card</div>
+    <div style="font-size:12px;color:#9C968F">With box-shadow for depth</div>
+  </div>
+</div>
+
+<h3>Upgrade Card</h3>
+<div class="component-row" style="margin-bottom:32px">
+  <div class="card-demo-upgrade upgrade-card-interactive" id="upgrade-card-demo" style="width:300px;position:relative" onclick="playUpgradeBounce()">
+    <div id="upgrade-card-face" style="flex-shrink:0;display:flex;align-items:center"></div>
+    <div style="flex:1"><div style="font-size:13px;font-weight:700">Guilty -- $5 once</div><div style="font-size:11px;color:#9C968F">Unlimited roasts, Focus mode & more</div></div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CCC7C2" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+</div>
+<div class="type-meta" style="margin-bottom:32px">Click to preview. Bounce: cardBounce 0.6s spring -- Glow: #EAB308 ring + gold gradient overlay -- Auto-triggers every 15-30s in accessories & gallery</div>
+
+<h3>Chat Bubbles</h3>
+<div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin-bottom:24px">
+  <div class="bubble bubble-bot">Stop opening tabs and start closing them.</div>
+  <div class="bubble bubble-user">That's not fair, I need those tabs!</div>
+  <div class="bubble bubble-bot">Sure you do. All 47 of them.</div>
+</div>
+<div class="type-meta" style="margin-bottom:32px">14px -- padding: 12px 16px -- radius: 18px -- bot: bottom-left 6px -- user: bottom-right 6px</div>
+
+<h3>Form Elements</h3>
+<div class="component-row" style="gap:24px;margin-bottom:16px">
+  <input class="input-demo" placeholder="Search Google or type a URL" />
+  <div class="toggle-group">
+    <button class="toggle-btn active" onclick="this.parentElement.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Light</button>
+    <button class="toggle-btn" onclick="this.parentElement.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Dark</button>
+  </div>
+</div>
+<div class="component-row" style="margin-bottom:32px">
+  <div class="checkbox-demo" onclick="this.querySelector('.checkbox-circle').classList.toggle('checked');this.querySelector('.checkbox-label').classList.toggle('checked')">
+    <div class="checkbox-circle"></div>
+    <span class="checkbox-label">Unchecked item</span>
+  </div>
+  <div class="checkbox-demo">
+    <div class="checkbox-circle checked"></div>
+    <span class="checkbox-label checked">Completed item</span>
+  </div>
+</div>
+
+<h3>Focus Island</h3>
+<div class="island-demo">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+    <div class="island-action-demo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+    <div class="island-action-demo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+    <div style="display:flex;align-items:center">
+      <div class="island-circle"></div>
+      <div class="island-expand-demo"><span>End focus</span></div>
+    </div>
+  </div>
+  <div class="island-badge-demo">3:42</div>
+</div>
+<div class="type-meta" style="margin-top:8px;margin-bottom:24px">Circle: 52px, #18181B -- Badge: 10px/700 tabular-nums -- Actions: 30px circles, slide up on hover -- Expand: slides right</div>
+
+<!-- ─── SPATIAL ─── -->
+<h2 id="spatial">Spatial</h2>
+
+<h3>Shadows</h3>
+<div class="shadow-grid">
+  <div class="shadow-box" style="box-shadow:0 2px 8px rgba(0,0,0,0.06)">subtle</div>
+  <div class="shadow-box" style="box-shadow:0 4px 20px rgba(0,0,0,0.08)">standard</div>
+  <div class="shadow-box" style="box-shadow:0 4px 20px rgba(0,0,0,0.15)">strong</div>
+  <div class="shadow-box" style="box-shadow:0 0 0 2px #EAB308, 0 4px 20px rgba(234,179,8,0.35)">xp glow</div>
+</div>
+
+<h3>Border Radius</h3>
+<div class="radius-row">
+  <div class="radius-box" style="width:32px;height:32px;border-radius:4px">4</div>
+  <div class="radius-box" style="width:36px;height:36px;border-radius:8px">8</div>
+  <div class="radius-box" style="width:40px;height:40px;border-radius:10px">10</div>
+  <div class="radius-box" style="width:48px;height:48px;border-radius:14px">14</div>
+  <div class="radius-box" style="width:52px;height:52px;border-radius:18px">18</div>
+  <div class="radius-box" style="width:56px;height:56px;border-radius:20px">20</div>
+  <div class="radius-box" style="width:48px;height:48px;border-radius:50%">50%</div>
+</div>
+<div class="type-meta" style="margin-bottom:32px">4px: inputs | 8px: small buttons | 14px: cards | 18px: bubbles | 20px: pills, drawers | 50%: circles</div>
+
+<h3>Spacing Scale</h3>
+<div style="margin-bottom:32px">
+  <div class="spacing-row"><span class="spacing-label">2px</span><div class="spacing-bar" style="width:2px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">4px</span><div class="spacing-bar" style="width:4px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">6px</span><div class="spacing-bar" style="width:6px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">8px</span><div class="spacing-bar" style="width:8px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">10px</span><div class="spacing-bar" style="width:10px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">12px</span><div class="spacing-bar" style="width:12px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">14px</span><div class="spacing-bar" style="width:14px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">16px</span><div class="spacing-bar" style="width:16px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">20px</span><div class="spacing-bar" style="width:20px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">24px</span><div class="spacing-bar" style="width:24px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">32px</span><div class="spacing-bar" style="width:32px"></div></div>
+  <div class="spacing-row"><span class="spacing-label">48px</span><div class="spacing-bar" style="width:48px"></div></div>
+</div>
+
+<!-- ─── ANIMATIONS ─── -->
+<h2 id="animations">Animations</h2>
+<p class="section-note">Click each card to preview the animation.</p>
+<div class="anim-grid">
+  <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='cardBounce 0.6s cubic-bezier(0.36,0.07,0.19,0.97)'">
+    <div class="anim-card-preview"></div>
+    <div class="anim-card-name">cardBounce</div>
+    <div class="anim-card-meta">0.6s spring</div>
+  </div>
+  <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275)'">
+    <div class="anim-card-preview" style="border-radius:50%"></div>
+    <div class="anim-card-name">popIn</div>
+    <div class="anim-card-meta">0.5s overshoot</div>
+  </div>
+  <div class="anim-card" onclick="let el=this.querySelector('.anim-card-preview');el.style.animation='none';el.offsetHeight;el.style.animation='fadeInUp 0.4s ease-out'">
+    <div class="anim-card-preview"></div>
+    <div class="anim-card-name">fadeInUp</div>
+    <div class="anim-card-meta">0.4s ease-out</div>
+  </div>
+</div>
+
+<h3>Easing Curves</h3>
+<table class="token-table">
+  <tr><th>Name</th><th>Value</th><th>Usage</th></tr>
+  <tr><td>Standard</td><td><code>cubic-bezier(0.4, 0, 0.2, 1)</code></td><td>Drawer slides, panel transitions, island expand</td></tr>
+  <tr><td>Overshoot</td><td><code>cubic-bezier(0.175, 0.885, 0.32, 1.275)</code></td><td>Pop in, character entrance</td></tr>
+  <tr><td>Strong bounce</td><td><code>cubic-bezier(0.34, 1.56, 0.64, 1)</code></td><td>XP banner, celebrations</td></tr>
+  <tr><td>Spring</td><td><code>cubic-bezier(0.36, 0.07, 0.19, 0.97)</code></td><td>Card bounce, upgrade shake</td></tr>
+</table>
+
+<h3>Durations</h3>
+<table class="token-table">
+  <tr><th>Speed</th><th>Duration</th><th>Usage</th></tr>
+  <tr><td>Fast</td><td><code>0.15s</code></td><td>Hover colors, icon button scale, island action hover</td></tr>
+  <tr><td>Medium</td><td><code>0.2s</code></td><td>Button hovers, background transitions, badge fade</td></tr>
+  <tr><td>Standard</td><td><code>0.3s</code></td><td>Drawer toggles, panel visibility, end focus transition</td></tr>
+  <tr><td>Slow</td><td><code>0.35s</code></td><td>Drawer slide, island expand panel</td></tr>
+  <tr><td>Celebration</td><td><code>0.4-0.6s</code></td><td>XP effects, bounce, pop, card flip</td></tr>
+</table>
+
+<!-- ─── ALL CSS VARIABLES ─── -->
+<h2 id="variables">All CSS Variables</h2>
+<table class="token-table">
+  <tr><th></th><th>Variable</th><th>Light</th><th>Dark</th></tr>
+  <tr><td><span class="token-dot" style="background:#FAF8F5"></span></td><td><code>--jesty-bg</code></td><td>#FAF8F5</td><td>#18181B</td></tr>
+  <tr><td><span class="token-dot" style="background:#F0EDEA"></span></td><td><code>--jesty-bg-secondary</code></td><td>#F0EDEA</td><td>#27272A</td></tr>
+  <tr><td><span class="token-dot" style="background:#F5F3F0"></span></td><td><code>--jesty-bg-tertiary</code></td><td>#F5F3F0</td><td>#1F1F23</td></tr>
+  <tr><td><span class="token-dot" style="background:#1C1917"></span></td><td><code>--jesty-text</code></td><td>#1C1917</td><td>#F4F4F5</td></tr>
+  <tr><td><span class="token-dot" style="background:#6B6560"></span></td><td><code>--jesty-text-secondary</code></td><td>#6B6560</td><td>#A1A1AA</td></tr>
+  <tr><td><span class="token-dot" style="background:#9C968F"></span></td><td><code>--jesty-text-muted</code></td><td>#9C968F</td><td>#71717A</td></tr>
+  <tr><td><span class="token-dot" style="background:#CCC7C2"></span></td><td><code>--jesty-text-faint</code></td><td>#CCC7C2</td><td>#52525B</td></tr>
+  <tr><td><span class="token-dot" style="background:#DDD9D5"></span></td><td><code>--jesty-border</code></td><td>#DDD9D5</td><td>#3F3F46</td></tr>
+  <tr><td><span class="token-dot" style="background:#CCC7C2"></span></td><td><code>--jesty-border-hover</code></td><td>#CCC7C2</td><td>#52525B</td></tr>
+  <tr><td><span class="token-dot" style="background:#1C1917"></span></td><td><code>--jesty-border-strong</code></td><td>#1C1917</td><td>#F4F4F5</td></tr>
+  <tr><td><span class="token-dot" style="background:#1C1917"></span></td><td><code>--jesty-btn-bg</code></td><td>#1C1917</td><td>#F4F4F5</td></tr>
+  <tr><td><span class="token-dot" style="background:#FAF8F5"></span></td><td><code>--jesty-btn-text</code></td><td>#FAF8F5</td><td>#18181B</td></tr>
+  <tr><td><span class="token-dot" style="background:#292524"></span></td><td><code>--jesty-btn-hover</code></td><td>#292524</td><td>#E4E4E7</td></tr>
+  <tr><td><span class="token-dot" style="background:#DDD9D5"></span></td><td><code>--jesty-btn-disabled-bg</code></td><td>#DDD9D5</td><td>#3F3F46</td></tr>
+  <tr><td><span class="token-dot" style="background:#9C968F"></span></td><td><code>--jesty-btn-disabled-text</code></td><td>#9C968F</td><td>#71717A</td></tr>
+  <tr><td><span class="token-dot" style="background:#F0EDEA"></span></td><td><code>--jesty-bubble-bot-bg</code></td><td>#F0EDEA</td><td>#27272A</td></tr>
+  <tr><td><span class="token-dot" style="background:#1C1917"></span></td><td><code>--jesty-bubble-user-bg</code></td><td>#1C1917</td><td>#F4F4F5</td></tr>
+  <tr><td></td><td><code>--jesty-overlay</code></td><td>rgba(0,0,0,0.45)</td><td>rgba(0,0,0,0.60)</td></tr>
+  <tr><td></td><td><code>--jesty-shadow</code></td><td>rgba(0,0,0,0.10)</td><td>rgba(0,0,0,0.30)</td></tr>
+  <tr><td></td><td><code>--jesty-shadow-md</code></td><td>rgba(0,0,0,0.14)</td><td>rgba(0,0,0,0.40)</td></tr>
+</table>
+
+<div style="height:80px"></div>
+</div><!-- /container -->
+
+<!-- ─── SCRIPTS ─── -->
+<script>
+  function playXPBanner() {
+    const el = document.getElementById('xp-banner-demo');
+    el.classList.remove('playing');
+    void el.offsetHeight;
+    el.classList.add('playing');
+    setTimeout(() => el.classList.remove('playing'), 2800);
+  }
+
+  function playUpgradeBounce() {
+    const el = document.getElementById('upgrade-card-demo');
+    el.classList.remove('bounce');
+    void el.offsetHeight;
+    el.classList.add('bounce');
+    setTimeout(() => el.classList.remove('bounce'), 700);
+  }
+</script>
+<script src="assets/characters.js"></script>
+<script>
+(function() {
+  const COLORS = [
+    { label: 'Lime',   body: '#EBF34F', limb: '#C8D132', shadow: '#8A9618', highlight: '#F8FBCE' },
+    { label: 'Pink',   body: '#FF8FA3', limb: '#E0637A', shadow: '#B84D60', highlight: '#FFD4DC' },
+    { label: 'Sky',    body: '#87CEEB', limb: '#5BAED4', shadow: '#3A8CB5', highlight: '#C8E8F5' },
+    { label: 'Purple', body: '#A78BFA', limb: '#7C5FD6', shadow: '#5B3FB5', highlight: '#D4C8FD' },
+    { label: 'Mint',   body: '#34D399', limb: '#1EB57F', shadow: '#15875F', highlight: '#A7F0D4' },
+    { label: 'Peach',  body: '#FDBA74', limb: '#E09550', shadow: '#B87638', highlight: '#FEE0C0' },
+  ];
+  const SOURCE = { body: '#EBF34F', limb: '#C8D132', shadow: '#8A9618', highlight: '#F8FBCE' };
+  const EXPRESSIONS = [
+    { name: 'smug', tier: 'Free' }, { name: 'suspicious', tier: 'Free' },
+    { name: 'yikes', tier: 'Free' }, { name: 'eyeroll', tier: 'Free' },
+    { name: 'disappointed', tier: 'Free' }, { name: 'melting', tier: 'Free' },
+    { name: 'dead', tier: 'Free' }, { name: 'thinking', tier: 'System' },
+    { name: 'happy', tier: 'System' }, { name: 'impressed', tier: 'Guilty' },
+    { name: 'manic', tier: 'Guilty' }, { name: 'petty', tier: 'Guilty' },
+    { name: 'chaotic', tier: 'Sentenced' }, { name: 'dramatic', tier: 'Sentenced' },
+    { name: 'tender', tier: 'Sentenced' },
+  ];
+  const ACCESSORIES = [
+    { id: 'party-hat', name: 'Party Hat', tier: 'Free', level: 2, slot: 'hat' },
+    { id: 'sunglasses', name: 'Sunglasses', tier: 'Free', level: 3, slot: 'glasses' },
+    { id: 'bandana', name: 'Bandana', tier: 'Free', level: 4, slot: 'hat' },
+    { id: 'heart-shades', name: 'Heart Shades', tier: 'Free', level: 5, slot: 'glasses' },
+    { id: 'beanie', name: 'Beanie', tier: 'Guilty', level: 6, slot: 'hat' },
+    { id: 'aviators', name: 'Aviators', tier: 'Guilty', level: 7, slot: 'glasses' },
+    { id: 'chef-hat', name: 'Chef Hat', tier: 'Guilty', level: 8, slot: 'hat' },
+    { id: '3d-glasses', name: '3D Glasses', tier: 'Guilty', level: 9, slot: 'glasses' },
+    { id: 'monocle', name: 'Monocle', tier: 'Guilty', level: 10, slot: 'glasses' },
+    { id: 'propeller-hat', name: 'Propeller Hat', tier: 'Guilty', level: 11, slot: 'hat' },
+    { id: 'star-glasses', name: 'Star Glasses', tier: 'Guilty', level: 12, slot: 'glasses' },
+    { id: 'crown', name: 'Crown', tier: 'Guilty', level: 13, slot: 'hat' },
+    { id: 'bow-tie', name: 'Bow Tie', tier: 'Guilty', level: 14, slot: 'glasses' },
+    { id: 'detective-hat', name: 'Detective Hat', tier: 'Guilty', level: 15, slot: 'hat' },
+    { id: 'headband', name: 'Headband', tier: 'Guilty', level: 16, slot: 'hat' },
+    { id: 'viking-helmet', name: 'Viking Helmet', tier: 'Guilty', level: 17, slot: 'hat' },
+    { id: 'top-hat', name: 'Top Hat', tier: 'Guilty', level: 18, slot: 'hat' },
+    { id: 'pirate-hat', name: 'Pirate Hat', tier: 'Guilty', level: 19, slot: 'hat' },
+    { id: 'halo', name: 'Halo', tier: 'Guilty', level: 20, slot: 'hat' },
+    { id: 'flame-crown', name: 'Flame Crown', tier: 'Sentenced', slot: 'hat' },
+    { id: 'neon-shades', name: 'Neon Shades', tier: 'Sentenced', slot: 'glasses' },
+    { id: 'wizard-hat', name: 'Wizard Hat', tier: 'Sentenced', slot: 'hat' },
+  ];
+
+  // Anchors for placing accessories on character
+  const ANCHORS = {
+    hat: { smug: { x: 38, y: -2 }, chaotic: { x: 40, y: -4, rotate: -8 }, dramatic: { x: 38, y: -2, rotate: 5 } },
+    glasses: { smug: { x: 32, y: 42 }, chaotic: { x: 34, y: 40, rotate: -8 }, dramatic: { x: 32, y: 42, rotate: 5 } }
+  };
+
+  let activeColor = COLORS[3]; // Purple default
+  JestyCharacters.init();
+
+  function recolorSvgClone(svgEl, from, to) {
+    const replacements = {};
+    for (const key of ['body', 'limb', 'shadow', 'highlight']) replacements[from[key].toUpperCase()] = to[key];
+    svgEl.querySelectorAll('*').forEach(el => {
+      for (const attr of ['fill', 'stroke']) {
+        const val = el.getAttribute(attr);
+        if (val && replacements[val.toUpperCase()]) el.setAttribute(attr, replacements[val.toUpperCase()]);
+      }
+    });
+  }
+
+  function buildFaceSvg(expressionName, color) {
+    const symbol = document.getElementById('face-' + expressionName);
+    if (!symbol) return null;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.setAttribute('viewBox', '-15 -10 150 140');
+    const suffix = expressionName + '-' + color.label;
+    let content = symbol.innerHTML;
+    content = content.replace(/id="clip-([^"]+)"/g, 'id="clip-$1-' + suffix + '"');
+    content = content.replace(/url\(#clip-([^)]+)\)/g, 'url(#clip-$1-' + suffix + ')');
+    svg.innerHTML = content;
+    if (color.label !== 'Lime') recolorSvgClone(svg, SOURCE, color);
+    return svg;
+  }
+
+  function buildAccSvg(accId) {
+    const symbol = document.getElementById('acc-' + accId);
+    if (!symbol) return null;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', symbol.getAttribute('viewBox'));
+    svg.innerHTML = symbol.innerHTML;
+    return svg;
+  }
+
+  function downloadSvgEl(svgEl, filename) {
+    if (!svgEl) return;
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', '300');
+    clone.setAttribute('height', '280');
+    const str = new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([str], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ─── Hero character: "chaotic" expression + flame-crown + neon-shades ───
+  (function renderHero() {
+    const container = document.getElementById('hero-character');
+    const svg = buildFaceSvg('chaotic', COLORS[3]); // Purple chaotic
+    if (!svg) return;
+    svg.style.cssText = 'width:100%;height:auto';
+
+    // Add flame crown
+    const flameSym = document.getElementById('acc-flame-crown');
+    if (flameSym) {
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-flame-crown');
+      use.setAttribute('x', '28'); use.setAttribute('y', '-14');
+      use.setAttribute('width', '60'); use.setAttribute('height', '40');
+      use.setAttribute('transform', 'rotate(-8, 58, 6)');
+      svg.appendChild(use);
+    }
+
+    // Add neon shades
+    const neonSym = document.getElementById('acc-neon-shades');
+    if (neonSym) {
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-neon-shades');
+      use.setAttribute('x', '24'); use.setAttribute('y', '34');
+      use.setAttribute('width', '68'); use.setAttribute('height', '24');
+      use.setAttribute('transform', 'rotate(-8, 58, 46)');
+      svg.appendChild(use);
+    }
+
+    container.appendChild(svg);
+  })();
+
+  // ─── Character color tabs & grid ───
+  function renderCharTabs() {
+    const tabs = document.getElementById('char-color-tabs');
+    tabs.innerHTML = '';
+    COLORS.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'color-tab' + (c.label === activeColor.label ? ' active' : '');
+      btn.innerHTML = '<span class="color-tab-dot" style="background:' + c.body + '"></span>' + c.label;
+      btn.onclick = () => { activeColor = c; renderCharTabs(); renderCharGrid(); };
+      tabs.appendChild(btn);
+    });
+  }
+
+  function renderCharGrid() {
+    const grid = document.getElementById('char-grid');
+    grid.innerHTML = '';
+    EXPRESSIONS.forEach(expr => {
+      const card = document.createElement('div');
+      card.className = 'grid-card';
+      const svg = buildFaceSvg(expr.name, activeColor);
+      if (svg) { svg.style.cssText = 'width:80px;height:74px'; card.appendChild(svg); }
+      const label = document.createElement('span');
+      label.className = 'grid-card-label';
+      label.textContent = expr.name;
+      card.appendChild(label);
+      const tierBadge = document.createElement('span');
+      tierBadge.className = 'badge ' + (expr.tier === 'System' ? 'badge-level' : expr.tier === 'Guilty' ? 'badge-premium' : expr.tier === 'Sentenced' ? 'badge-pro' : 'badge-free');
+      tierBadge.textContent = expr.tier;
+      card.appendChild(tierBadge);
+      const dl = document.createElement('button');
+      dl.className = 'grid-card-dl';
+      dl.textContent = 'Download SVG';
+      dl.onclick = () => downloadSvgEl(buildFaceSvg(expr.name, activeColor), 'jesty-' + expr.name + '-' + activeColor.label.toLowerCase() + '.svg');
+      card.appendChild(dl);
+      grid.appendChild(card);
+    });
+  }
+
+  renderCharTabs();
+  renderCharGrid();
+
+  // ─── Component faces (XP banner + upgrade card) ───
+  const purple = COLORS[3];
+
+  // XP banner: happy face at 40x37 (matches sidepanel xp-win-face)
+  const xpFaceContainer = document.getElementById('xp-banner-face');
+  if (xpFaceContainer) {
+    const svg = buildFaceSvg('happy', purple);
+    if (svg) {
+      svg.setAttribute('width', '40');
+      svg.setAttribute('height', '37');
+      svg.style.cssText = 'display:block;overflow:visible';
+      xpFaceContainer.appendChild(svg);
+    }
+  }
+
+  // Upgrade card: impressed face at 36x34 (matches sidepanel plans-upgrade-icon)
+  const upgradeFaceContainer = document.getElementById('upgrade-card-face');
+  if (upgradeFaceContainer) {
+    const svg = buildFaceSvg('impressed', purple);
+    if (svg) {
+      svg.setAttribute('width', '36');
+      svg.setAttribute('height', '34');
+      svg.style.cssText = 'display:block;overflow:visible';
+      upgradeFaceContainer.appendChild(svg);
+    }
+  }
+
+  // ─── Promo faces strip (matches sidepanel promo card) ───
+  const PROMO_FACES = [
+    { expression: 'smug',       color: COLORS[0] },  // Lime
+    { expression: 'suspicious', color: COLORS[1] },  // Pink
+    { expression: 'yikes',      color: COLORS[2] },  // Sky
+    { expression: 'eyeroll',    color: COLORS[3] },  // Purple
+    { expression: 'dead',       color: COLORS[4] },  // Mint
+  ];
+  const promoStrip = document.getElementById('promo-faces-strip');
+  if (promoStrip) {
+    PROMO_FACES.forEach((face, i) => {
+      const svg = buildFaceSvg(face.expression, face.color);
+      if (!svg) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'promo-face promo-face-' + (i + 1);
+      wrap.appendChild(svg);
+      promoStrip.appendChild(wrap);
+    });
+  }
+
+  // ─── Tier card faces (matches sidepanel TIER_COMBOS) ───
+  const TIER_COMBOS = [
+    { container: 'tier-face-free', expression: 'smug', color: COLORS[0], hat: null },          // Lime smug
+    { container: 'tier-face-premium', expression: 'happy', color: COLORS[1], hat: 'acc-crown' }, // Pink happy + crown
+    { container: 'tier-face-pro', expression: 'smug', color: COLORS[4], hat: 'acc-flame-crown' } // Mint smug + flame crown
+  ];
+  TIER_COMBOS.forEach(combo => {
+    const el = document.getElementById(combo.container);
+    if (!el) return;
+    const svg = buildFaceSvg(combo.expression, combo.color);
+    if (!svg) return;
+    svg.setAttribute('width', '52');
+    svg.setAttribute('height', '48');
+    svg.style.cssText = 'position:relative;display:block;overflow:visible';
+    if (combo.hat) {
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + combo.hat);
+      use.setAttribute('x', '28'); use.setAttribute('y', '-6');
+      use.setAttribute('width', '60'); use.setAttribute('height', '40');
+      svg.appendChild(use);
+    }
+    el.appendChild(svg);
+  });
+
+  // ─── Accessories grid ───
+  const accGrid = document.getElementById('acc-grid');
+  ACCESSORIES.forEach(acc => {
+    const card = document.createElement('div');
+    card.className = 'acc-card';
+    const svg = buildAccSvg(acc.id);
+    if (svg) { svg.style.cssText = 'width:56px;height:40px'; card.appendChild(svg); }
+    const label = document.createElement('span');
+    label.className = 'acc-card-name';
+    label.textContent = acc.name;
+    card.appendChild(label);
+    const tierBadge = document.createElement('span');
+    tierBadge.className = 'badge ' + (acc.tier === 'Guilty' ? 'badge-premium' : acc.tier === 'Sentenced' ? 'badge-pro' : 'badge-free');
+    tierBadge.textContent = acc.tier + (acc.level ? ' Lv' + acc.level : '');
+    card.appendChild(tierBadge);
+    const dl = document.createElement('button');
+    dl.className = 'grid-card-dl';
+    dl.textContent = 'Download SVG';
+    dl.onclick = () => {
+      const s = buildAccSvg(acc.id);
+      if (s) { s.setAttribute('width', '200'); s.setAttribute('height', '140'); downloadSvgEl(s, 'jesty-acc-' + acc.id + '.svg'); }
+    };
+    card.appendChild(dl);
+    accGrid.appendChild(card);
+  });
+})();
+</script>
+
+</body>
+</html>
