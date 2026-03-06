@@ -307,8 +307,8 @@
       .nav { position: fixed; top: 0; left: 0; right: 0; bottom: auto; width: 100%; height: 48px; flex-direction: row; align-items: center; justify-content: space-between; padding: 0 16px; border-right: none; border-bottom: 1px solid #DDD9D5; overflow: visible; }
       .nav-logo { margin-bottom: 0; }
       .nav-burger { display: flex; align-items: center; justify-content: center; }
-      .nav-links { position: fixed; top: 48px; left: 0; right: 0; bottom: 0; background: rgba(250,248,245,0.97); backdrop-filter: blur(12px); flex-direction: column; gap: 2px; padding: 16px; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 99; }
-      .nav-links.open { transform: translateX(0); }
+      .nav-links { position: fixed; top: 48px; left: 0; right: 0; background: rgba(250,248,245,0.97); backdrop-filter: blur(12px); flex-direction: column; gap: 2px; padding: 12px 16px; border-bottom: 1px solid #DDD9D5; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-100%); opacity: 0; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; z-index: 99; pointer-events: none; }
+      .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
       .nav-link { font-size: 14px; padding: 10px 12px; }
       .nav-overlay { display: none; position: fixed; inset: 0; top: 48px; background: rgba(0,0,0,0.3); z-index: 98; }
       .nav-overlay.open { display: block; }
@@ -383,10 +383,10 @@
 <!-- Nav -->
 <nav class="nav">
   <a class="nav-logo" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false"><img class="nav-logo-face" src="assets/icon.svg" alt="Jesty">Jesty System</a>
-  <button class="nav-burger" onclick="document.querySelector('.nav-links').classList.toggle('open');document.querySelector('.nav-overlay').classList.toggle('open')" aria-label="Menu">
+  <button class="nav-burger" onclick="document.getElementById('nav-links').classList.toggle('open');document.getElementById('nav-overlay').classList.toggle('open')" aria-label="Menu">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
   </button>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-links">
     <a class="nav-link" href="#features">Features</a>
     <a class="nav-link" href="#characters">Characters</a>
     <a class="nav-link" href="#accessories">Accessories</a>
@@ -399,12 +399,13 @@
     <a class="nav-link" href="#variables">Variables</a>
   </div>
 </nav>
-<div class="nav-overlay" onclick="document.querySelector('.nav-links').classList.remove('open');this.classList.remove('open')"></div>
+<div class="nav-overlay" id="nav-overlay" onclick="document.getElementById('nav-links').classList.remove('open');this.classList.remove('open')"></div>
 
 <div class="container">
 
 <!-- ─── HERO ─── -->
 <div class="hero">
+  <div class="hero-character" id="hero-character"></div>
   <div class="hero-content">
     <h1 class="hero-title">The Chrome extension that judges your 47 open tabs so you don't have to.</h1>
     <p class="hero-desc">Opening a new browser tab is a subtle but real increase in cognitive load. What starts as a simple action quickly turns into dozens of open tabs that are easy to forget and hard to manage. Most tab management tools respond with metrics and dashboards. Jesty responds with personality.</p>
@@ -415,7 +416,6 @@
       <strong>Stack:</strong> Chrome Extension (Manifest V3) &middot; OpenAI GPT-4o-mini &middot; DM Sans &middot; SVG characters
     </p>
   </div>
-  <div class="hero-character" id="hero-character"></div>
 </div>
 
 <!-- ─── PROMO FACES STRIP ─── -->
@@ -984,8 +984,8 @@
   // Close mobile menu on link click
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.remove('open');
-      document.querySelector('.nav-overlay').classList.remove('open');
+      document.getElementById('nav-links').classList.remove('open');
+      document.getElementById('nav-overlay').classList.remove('open');
     });
   });
 
