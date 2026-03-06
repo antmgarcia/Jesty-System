@@ -76,16 +76,17 @@
     @keyframes slotSpin { 0% { transform: scale(0.95) rotate(-3deg); } 50% { transform: scale(1.05) rotate(3deg); } 100% { transform: scale(0.95) rotate(-3deg); } }
     @keyframes slotLand { 0% { transform: scale(1); } 50% { transform: scale(1.14); } 100% { transform: scale(1); } }
 
-    /* Hero entrance animations */
-    #hero-headline { display: inline; transition: opacity 0.3s ease, transform 0.3s ease; }
-    #hero-headline.fade-out { opacity: 0; transform: translateY(8px); }
-    #hero-headline.fade-in { animation: headlineIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-    .hero-shuffle { opacity: 0; animation: btnEntrance 0.5s ease 0.6s forwards; }
+    /* Framer-style word reveal */
+    .hero-title { visibility: hidden; }
+    .hero-title.revealed { visibility: visible; }
+    .word-clip { display: inline-block; overflow: hidden; vertical-align: bottom; }
+    .word-clip .word-inner { display: inline-block; transform: translateY(110%); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+    .word-clip .word-inner.visible { transform: translateY(0); }
+    .word-clip .word-inner.exit { transform: translateY(-110%); transition: transform 0.35s cubic-bezier(0.55, 0, 1, 0.45); }
+    .hero-shuffle { opacity: 0; transition: opacity 0.4s ease; }
+    .hero-shuffle.visible { opacity: 1; }
     .hero-shuffle.shuffle-active svg { animation: spinIcon 1.8s linear; }
-    @keyframes headlineIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes btnEntrance { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spinIcon { 0% { transform: rotate(0deg); } 100% { transform: rotate(720deg); } }
-    .hero-title { opacity: 0; animation: headlineIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards; }
 
     /* Page structure */
     h2 { font-size: 28px; font-weight: 700; margin: 80px 0 24px; padding-bottom: 10px; border-bottom: 1px solid #DDD9D5; scroll-margin-top: 24px; }
@@ -1273,6 +1274,50 @@
     renderHeroCombo(randomCombo());
   })();
 
+  // ─── Framer-style word reveal ───
+  const WORD_STAGGER = 30; // ms between each word
+  const WORD_BASE_DELAY = 200; // initial delay on page load
+
+  function splitIntoWords(container, text) {
+    container.innerHTML = '';
+    const words = text.split(' ');
+    words.forEach((word, i) => {
+      if (i > 0) container.appendChild(document.createTextNode(' '));
+      const clip = document.createElement('span');
+      clip.className = 'word-clip';
+      const inner = document.createElement('span');
+      inner.className = 'word-inner';
+      inner.textContent = word;
+      clip.appendChild(inner);
+      container.appendChild(clip);
+    });
+  }
+
+  function revealWords(container, baseDelay) {
+    const inners = container.querySelectorAll('.word-inner');
+    inners.forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), baseDelay + i * WORD_STAGGER);
+    });
+    // Show shuffle button after last word
+    const btn = document.querySelector('.hero-shuffle');
+    if (btn) setTimeout(() => btn.classList.add('visible'), baseDelay + inners.length * WORD_STAGGER + 100);
+  }
+
+  function exitWords(container) {
+    const inners = container.querySelectorAll('.word-inner');
+    inners.forEach((el, i) => {
+      setTimeout(() => { el.classList.remove('visible'); el.classList.add('exit'); }, i * 20);
+    });
+    return inners.length * 20 + 350; // total exit duration
+  }
+
+  // Initial reveal on page load
+  const heroTitle = document.querySelector('.hero-title');
+  const heroHeadline = document.getElementById('hero-headline');
+  splitIntoWords(heroHeadline, HERO_HEADLINES[0]);
+  heroTitle.classList.add('revealed');
+  revealWords(heroHeadline, WORD_BASE_DELAY);
+
   window.shuffleHero = function() {
     if (heroSpinning) return;
     heroSpinning = true;
@@ -1282,20 +1327,16 @@
     if (btn) btn.classList.add('shuffle-active');
 
     const container = document.getElementById('hero-character');
-    const headline = document.getElementById('hero-headline');
     const target = randomCombo();
 
-    // Fade out headline
-    headline.classList.remove('fade-in');
-    headline.classList.add('fade-out');
+    // Exit words (slide up out)
+    const exitDuration = exitWords(heroHeadline);
+    if (btn) btn.classList.remove('visible');
 
-    // Add spinning wobble
+    // Start character spinning
     container.classList.remove('landing');
     container.classList.add('spinning');
 
-    // Phase 1: fast shuffle (15 × 80ms = 1.2s)
-    // Phase 2: decelerate (120, 200, 350ms)
-    // Phase 3: land on target
     const phase1Count = 15;
     const phase2Delays = [120, 200, 350];
     let step = 0;
@@ -1314,20 +1355,19 @@
         container.classList.remove('spinning');
         container.classList.add('landing');
 
-        // Swap headline to a different roast
+        // Swap headline and reveal words
         let newIndex;
         do { newIndex = Math.floor(Math.random() * HERO_HEADLINES.length); } while (newIndex === currentHeadlineIndex && HERO_HEADLINES.length > 1);
         currentHeadlineIndex = newIndex;
-        headline.textContent = HERO_HEADLINES[newIndex];
-        headline.classList.remove('fade-out');
-        headline.classList.add('fade-in');
+        splitIntoWords(heroHeadline, HERO_HEADLINES[newIndex]);
+        revealWords(heroHeadline, 50);
 
+        const wordCount = heroHeadline.querySelectorAll('.word-inner').length;
         setTimeout(() => {
           container.classList.remove('landing');
-          headline.classList.remove('fade-in');
           heroSpinning = false;
           if (btn) { btn.style.pointerEvents = ''; btn.classList.remove('shuffle-active'); }
-        }, 400);
+        }, 50 + wordCount * WORD_STAGGER + 200);
       }
     }
 
