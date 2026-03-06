@@ -45,6 +45,10 @@
     .hero-meta strong { color: #1C1917; font-weight: 600; }
     .hero-character { width: 180px; flex-shrink: 0; order: 1; }
     .hero-character svg { width: 100%; height: auto; }
+    .hero-shuffle { order: 1; align-self: center; display: flex; align-items: center; gap: 6px; font-family: 'DM Sans'; font-size: 11px; font-weight: 600; color: #9C968F; background: none; border: 1.5px solid #DDD9D5; border-radius: 20px; padding: 6px 14px; cursor: pointer; transition: all 0.2s; margin-top: -12px; }
+    .hero-shuffle:hover { color: #1C1917; border-color: #CCC7C2; }
+    .hero-shuffle svg { transition: transform 0.3s ease; }
+    .hero-shuffle:active svg { transform: rotate(180deg); }
 
     /* Page structure */
     h2 { font-size: 28px; font-weight: 700; margin: 80px 0 24px; padding-bottom: 10px; border-bottom: 1px solid #DDD9D5; scroll-margin-top: 24px; }
@@ -320,6 +324,7 @@
       .hero-title { font-size: 40px; }
       .hero-desc { font-size: 16px; }
       .hero-character { width: 140px; order: -1; }
+      .hero-shuffle { display: none; }
 
       h2 { font-size: 24px; margin: 56px 0 20px; scroll-margin-top: 64px; }
       h3 { margin: 28px 0 12px; }
@@ -407,6 +412,9 @@
 <!-- ─── HERO ─── -->
 <div class="hero">
   <div class="hero-character" id="hero-character"></div>
+  <button class="hero-shuffle" onclick="shuffleHero()" title="Shuffle character">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+  </button>
   <div class="hero-content">
     <h1 class="hero-title">The Chrome extension that judges your 47 open tabs so you don't have to.</h1>
     <p class="hero-desc">Opening a new browser tab is a subtle but real increase in cognitive load. What starts as a simple action quickly turns into dozens of open tabs that are easy to forget and hard to manage. Most tab management tools respond with metrics and dashboards. Jesty responds with personality.</p>
@@ -1139,6 +1147,51 @@
 
     container.appendChild(svg);
   })();
+
+  // ─── Shuffle hero character ───
+  function shuffleHero() {
+    const container = document.getElementById('hero-character');
+    container.innerHTML = '';
+    const expr = EXPRESSIONS[Math.floor(Math.random() * EXPRESSIONS.length)].name;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const svg = buildFaceSvg(expr, color);
+    if (!svg) return;
+    svg.style.cssText = 'width:100%;height:auto';
+
+    // Random hat (50% chance)
+    const hats = ACCESSORIES.filter(a => a.slot === 'hat');
+    if (Math.random() > 0.4 && hats.length) {
+      const hat = hats[Math.floor(Math.random() * hats.length)];
+      const sym = document.getElementById('acc-' + hat.id);
+      if (sym) {
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + hat.id);
+        const a = (ANCHORS.hat[expr] || ANCHORS.hat.smug || { x: 38, y: -2 });
+        use.setAttribute('x', a.x); use.setAttribute('y', a.y);
+        use.setAttribute('width', '60'); use.setAttribute('height', '40');
+        if (a.rotate) use.setAttribute('transform', 'rotate(' + a.rotate + ', ' + (a.x + 30) + ', ' + (a.y + 20) + ')');
+        svg.appendChild(use);
+      }
+    }
+
+    // Random glasses (50% chance)
+    const glasses = ACCESSORIES.filter(a => a.slot === 'glasses');
+    if (Math.random() > 0.4 && glasses.length) {
+      const g = glasses[Math.floor(Math.random() * glasses.length)];
+      const sym = document.getElementById('acc-' + g.id);
+      if (sym) {
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#acc-' + g.id);
+        const a = (ANCHORS.glasses[expr] || ANCHORS.glasses.smug || { x: 32, y: 42 });
+        use.setAttribute('x', a.x); use.setAttribute('y', a.y);
+        use.setAttribute('width', '68'); use.setAttribute('height', '24');
+        if (a.rotate) use.setAttribute('transform', 'rotate(' + a.rotate + ', ' + (a.x + 34) + ', ' + (a.y + 12) + ')');
+        svg.appendChild(use);
+      }
+    }
+
+    container.appendChild(svg);
+  }
 
   // ─── Character color tabs & grid ───
   function renderCharTabs() {
