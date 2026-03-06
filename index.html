@@ -38,7 +38,7 @@
     .container { max-width: 975px; margin: 0 auto; padding: 0 32px; }
 
     /* Hero banner — full-width bg, content constrained */
-    .hero-banner { background: #A78BFA; border-bottom: 1px solid #7C5FD6; }
+    .hero-banner { background: #A78BFA; border-bottom: none; }
     .hero { display: flex; align-items: center; gap: 48px; padding: 64px 32px 48px; max-width: 975px; margin: 0 auto; }
     .hero-content { flex: 1; }
     .hero-title { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; color: #1C1917; }
@@ -1154,6 +1154,10 @@
     URL.revokeObjectURL(url);
   }
 
+  // ─── Hero background color (random, characters must avoid it) ───
+  const heroBgColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+  document.querySelector('.hero-banner').style.background = heroBgColor.body;
+
   // ─── Shuffle hero character (slot machine style — same as sidepanel) ───
   let heroSpinning = false;
   let heroSvg = null;
@@ -1206,7 +1210,8 @@
 
   function randomCombo() {
     const expr = EXPRESSIONS[Math.floor(Math.random() * EXPRESSIONS.length)].name;
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const available = COLORS.filter(c => c.label !== heroBgColor.label);
+    const color = available[Math.floor(Math.random() * available.length)];
     const hats = ACCESSORIES.filter(a => a.slot === 'hat');
     const glasses = ACCESSORIES.filter(a => a.slot === 'glasses');
     const hat = Math.random() > 0.3 ? hats[Math.floor(Math.random() * hats.length)].id : null;
@@ -1221,8 +1226,8 @@
     heroSvg.setAttribute('viewBox', '-15 -10 150 140');
     heroSvg.style.cssText = 'width:100%;height:auto';
     container.appendChild(heroSvg);
-    // Initial render: Purple chaotic + flame crown + neon shades
-    renderHeroCombo({ expr: 'chaotic', color: COLORS[3], hat: 'flame-crown', glasses: 'neon-shades' });
+    // Initial render: random combo avoiding bg color
+    renderHeroCombo(randomCombo());
   })();
 
   window.shuffleHero = function() {
