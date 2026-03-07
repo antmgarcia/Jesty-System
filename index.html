@@ -65,9 +65,9 @@
     .hero-character-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; order: 1; }
     .hero-character { width: 220px; }
     .hero-character svg { width: 100%; height: auto; }
-    .hero-shuffle { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 16px; background: #1C1917; border: none; border-radius: 18px; color: #FAF8F5; cursor: pointer; transition: all 0.2s; vertical-align: middle; margin-left: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; }
+    .hero-shuffle { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; background: none; border: 1.5px solid rgba(0,0,0,0.25); border-radius: 18px; color: #1C1917; cursor: pointer; transition: all 0.2s; vertical-align: middle; margin-left: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; }
     .hero-shuffle-label { }
-    .hero-shuffle:hover { background: #292524; transform: scale(1.03); }
+    .hero-shuffle:hover { border-color: rgba(0,0,0,0.4); background: rgba(0,0,0,0.06); }
     .hero-shuffle:hover svg { transform: rotate(180deg); }
     .hero-shuffle svg { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.3s ease; }
     .hero-character.spinning { animation: slotSpin 150ms ease-in-out infinite; }
